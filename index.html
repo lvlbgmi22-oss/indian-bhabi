@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090909"><meta name="description" content="Indian Bhabi premium gallery">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg">
+<title>Indian Bhabi</title>
+<style>
+:root{--gold:#d8b35e;--cream:#f5e5b6;--muted:#b7aa8e;--bg:#090909}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#302313 0,#090909 55%);color:#fff8e8;font-family:system-ui,"Noto Sans Bengali",sans-serif;min-height:100vh}
+header{padding:20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #594522}.brand{font:700 22px Georgia,serif;letter-spacing:1.5px;color:var(--cream)}.crown{color:var(--gold)}
+main{max-width:760px;margin:auto;padding:24px 17px 105px}.hero{padding:30px 22px;border:1px solid #745727;border-radius:22px;background:linear-gradient(135deg,#2a1e0d,#111);box-shadow:0 15px 40px #0008}.eyebrow{color:var(--gold);font-size:11px;letter-spacing:3px;font-weight:800}.hero h1{font:700 36px/1.15 Georgia,serif;color:var(--cream);margin:13px 0}.hero p,.muted{color:var(--muted);line-height:1.7}.btn{display:inline-block;background:linear-gradient(100deg,#b88932,#f3dc99);color:#171109;padding:13px 20px;border-radius:30px;text-decoration:none;font-weight:800;margin-top:10px}
+h2{font:700 24px Georgia,serif;color:var(--cream);margin:30px 0 14px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.tile{min-height:145px;padding:17px;border:1px solid #4e3c20;border-radius:17px;background:linear-gradient(145deg,#211b12,#111);display:flex;flex-direction:column;justify-content:space-between}.symbol{font-size:29px;color:var(--gold)}.tile small{color:var(--muted);line-height:1.5}.notice{margin-top:22px;border:1px solid #4e3c20;border-radius:15px;padding:15px;color:#c9bb99;font-size:13px;line-height:1.7}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;background:#0c0c0cf5;border-top:1px solid #594522;padding:12px 6px calc(12px + env(safe-area-inset-bottom));backdrop-filter:blur(12px)}nav a{color:var(--cream);font-size:12px;text-decoration:none;text-align:center}nav span{display:block;font-size:20px;margin-bottom:3px}
+@media(min-width:600px){.hero{padding:42px}.hero h1{font-size:46px}.grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header><div class="brand">INDIAN BHABI</div><div class="crown">✦ PREMIUM</div></header>
+<main>
+<section class="hero"><div class="eyebrow">EXCLUSIVE • PREMIUM • MEMBERS</div><h1>স্বাগতম<br>Indian Bhabi-তে</h1><p>একটি প্রিমিয়াম গ্যালারি অভিজ্ঞতা—সুন্দর, সহজ এবং মোবাইলের জন্য তৈরি।</p><a class="btn" href="#membership">মেম্বারশিপ দেখুন →</a></section>
+<h2>Explore Gallery</h2>
+<section class="grid">
+<div class="tile"><div class="symbol">♛</div><div><b>Photo Gallery</b><br><small>প্রিমিয়াম ছবির সংগ্রহ</small></div></div>
+<div class="tile"><div class="symbol">▶</div><div><b>Video Gallery</b><br><small>সদস্যদের জন্য ভিডিও</small></div></div>
+<div class="tile"><div class="symbol">✧</div><div><b>New Arrivals</b><br><small>নতুন কনটেন্টের আপডেট</small></div></div>
+<div class="tile"><div class="symbol">♙</div><div><b>My Account</b><br><small>সদস্যপদ ও প্রোফাইল</small></div></div>
+</section>
+
+<h2 id="account">Member Login</h2>
+<section class="tile" style="gap:12px">
+<p class="muted" style="margin:0">আগে তৈরি করা অ্যাকাউন্ট দিয়ে লগইন করো।</p>
+<form id="loginForm" style="display:grid;gap:10px">
+<input id="loginEmail" type="email" autocomplete="username" placeholder="Email address" required style="width:100%;padding:13px;border-radius:10px;border:1px solid #745727;background:#090909;color:#fff8e8">
+<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Password" required style="width:100%;padding:13px;border-radius:10px;border:1px solid #745727;background:#090909;color:#fff8e8">
+<button class="btn" type="submit" style="border:0;cursor:pointer">Login</button>
+</form>
+<button id="resetPassword" type="button" style="background:transparent;border:0;color:var(--gold);text-align:left;padding:4px;cursor:pointer">Forgot password?</button>
+<p id="authMessage" class="muted" role="status" aria-live="polite" style="margin:0">Firebase login প্রস্তুত হচ্ছে…</p>
+<button id="logoutButton" type="button" class="btn" style="display:none;border:0;cursor:pointer">Logout</button>
+</section>
+
+<h2 id="membership">Premium Membership</h2>
+<section class="tile"><div class="symbol">✦</div><div><b>Monthly Plan — ₹199</b><p class="muted">মাসিক সদস্যপদের প্রস্তাবিত মূল্য। পেমেন্ট ও সদস্যপদ যাচাই এখনো যুক্ত হয়নি।</p><a class="btn" href="mailto:misiroy75@gmail.com?subject=Indian%20Bhabi%20Membership">যোগাযোগ করুন</a></div></section>
+<div class="notice">লগইন Firebase Authentication দিয়ে যুক্ত করা হয়েছে। তবে অ্যাডমিনের অনুমতি, নিরাপদ মিডিয়া আপলোড, পেমেন্ট ও সাবস্ক্রিপশন যাচাই এখনো যুক্ত হয়নি। শুধু নিজের বা ব্যবহারের অনুমতি থাকা মিডিয়া ব্যবহার করুন।</div>
+</main>
+<nav><a href="#"><span>⌂</span>Home</a><a href="#membership"><span>♛</span>Premium</a><a href="mailto:misiroy75@gmail.com"><span>✉</span>Contact</a></nav>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script>
+(() => {
+  const firebaseConfig = {
+    apiKey: "AIzaSyDbkxXO00WVwB4QCGiLmoE5wlZnM4oCSPE",
+    authDomain: "indian-bhabi-696aa.firebaseapp.com",
+    projectId: "indian-bhabi-696aa",
+    storageBucket: "indian-bhabi-696aa.firebasestorage.app",
+    messagingSenderId: "618265959158",
+    appId: "1:618265959158:web:0d960ff3712839bb7fead7"
+  };
+  const form = document.getElementById("loginForm");
+  const email = document.getElementById("loginEmail");
+  const password = document.getElementById("loginPassword");
+  const message = document.getElementById("authMessage");
+  const logout = document.getElementById("logoutButton");
+  const reset = document.getElementById("resetPassword");
+  if (!window.firebase) {
+    message.textContent = "Firebase SDK লোড হয়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করো।";
+    return;
+  }
+  try {
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      message.textContent = "লগইন হচ্ছে…";
+      try {
+        await auth.signInWithEmailAndPassword(email.value.trim(), password.value);
+        password.value = "";
+      } catch (error) {
+        message.textContent = error.code === "auth/invalid-credential" || error.code === "auth/wrong-password" || error.code === "auth/user-not-found"
+          ? "ইমেল বা পাসওয়ার্ড ঠিক হয়নি। আবার পরীক্ষা করো।"
+          : "লগইন হয়নি: " + (error.message || error.code);
+      }
+    });
+    reset.addEventListener("click", async () => {
+      const address = email.value.trim();
+      if (!address) { message.textContent = "আগে ইমেল ঠিকানাটি লেখো।"; return; }
+      try {
+        await auth.sendPasswordResetEmail(address);
+        message.textContent = "পাসওয়ার্ড রিসেটের ইমেল পাঠানো হয়েছে। Inbox দেখো।";
+      } catch (error) {
+        message.textContent = "রিসেট ইমেল পাঠানো যায়নি: " + (error.message || error.code);
+      }
+    });
+    logout.addEventListener("click", () => auth.signOut());
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        message.textContent = "লগইন হয়েছে: " + user.email + "। এটি এখন শুধু সদস্য লগইন; অ্যাডমিন সুবিধা এখনো সক্রিয় নয়।";
+        form.style.display = "none";
+        reset.style.display = "none";
+        logout.style.display = "inline-block";
+      } else {
+        message.textContent = "লগইন করতে ইমেল ও পাসওয়ার্ড দাও।";
+        form.style.display = "grid";
+        reset.style.display = "inline-block";
+        logout.style.display = "none";
+      }
+    });
+  } catch (error) {
+    message.textContent = "Firebase চালু করা যায়নি: " + (error.message || error.code);
+  }
+})();
+</script>
+<script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script>
+</body>
+</html>
