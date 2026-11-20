@@ -6,12 +6,13 @@
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg">
 <title>Indian Bhabi</title>
 <style>
-:root{--gold:#d8b35e;--cream:#f5e5b6;--muted:#b7aa8e;--bg:#090909}
+:root{--gold:#d8b35e;--cream:#f5e5b6;--muted:#b7aa8e}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#302313 0,#090909 55%);color:#fff8e8;font-family:system-ui,"Noto Sans Bengali",sans-serif;min-height:100vh}
 header{padding:20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #594522}.brand{font:700 22px Georgia,serif;letter-spacing:1.5px;color:var(--cream)}.crown{color:var(--gold)}
 main{max-width:760px;margin:auto;padding:24px 17px 105px}.hero{padding:30px 22px;border:1px solid #745727;border-radius:22px;background:linear-gradient(135deg,#2a1e0d,#111);box-shadow:0 15px 40px #0008}.eyebrow{color:var(--gold);font-size:11px;letter-spacing:3px;font-weight:800}.hero h1{font:700 36px/1.15 Georgia,serif;color:var(--cream);margin:13px 0}.hero p,.muted{color:var(--muted);line-height:1.7}.btn{display:inline-block;background:linear-gradient(100deg,#b88932,#f3dc99);color:#171109;padding:13px 20px;border-radius:30px;text-decoration:none;font-weight:800;margin-top:10px}
-h2{font:700 24px Georgia,serif;color:var(--cream);margin:30px 0 14px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.tile{min-height:145px;padding:17px;border:1px solid #4e3c20;border-radius:17px;background:linear-gradient(145deg,#211b12,#111);display:flex;flex-direction:column;justify-content:space-between}.symbol{font-size:29px;color:var(--gold)}.tile small{color:var(--muted);line-height:1.5}.notice{margin-top:22px;border:1px solid #4e3c20;border-radius:15px;padding:15px;color:#c9bb99;font-size:13px;line-height:1.7}
-nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;background:#0c0c0cf5;border-top:1px solid #594522;padding:12px 6px calc(12px + env(safe-area-inset-bottom));backdrop-filter:blur(12px)}nav a{color:var(--cream);font-size:12px;text-decoration:none;text-align:center}nav span{display:block;font-size:20px;margin-bottom:3px}
+h2{font:700 24px Georgia,serif;color:var(--cream);margin:30px 0 14px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.tile{min-height:145px;padding:17px;border:1px solid #4e3c20;border-radius:17px;background:linear-gradient(145deg,#211b12,#111);display:flex;flex-direction:column;justify-content:space-between;gap:12px}.symbol{font-size:29px;color:var(--gold)}.tile small{color:var(--muted);line-height:1.5}.notice{margin-top:22px;border:1px solid #4e3c20;border-radius:15px;padding:15px;color:#c9bb99;font-size:13px;line-height:1.7}
+input,select,textarea{width:100%;padding:13px;border-radius:10px;border:1px solid #745727;background:#090909;color:#fff8e8;font:inherit}textarea{min-height:75px;resize:vertical}button{font:inherit}nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;background:#0c0c0cf5;border-top:1px solid #594522;padding:12px 6px calc(12px + env(safe-area-inset-bottom));backdrop-filter:blur(12px)}nav a{color:var(--cream);font-size:12px;text-decoration:none;text-align:center}nav span{display:block;font-size:20px;margin-bottom:3px}
+.media-card{border:1px solid #4e3c20;border-radius:13px;padding:13px;margin-top:10px;background:#17130d;overflow-wrap:anywhere}.media-card a{color:var(--gold)}.small-btn{background:transparent;border:1px solid #795c2a;color:#f5e5b6;border-radius:8px;padding:7px 10px;margin-top:8px}
 @media(min-width:600px){.hero{padding:42px}.hero h1{font-size:46px}.grid{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
@@ -27,12 +28,16 @@ nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-ar
 <div class="tile"><div class="symbol">♙</div><div><b>My Account</b><br><small>সদস্যপদ ও প্রোফাইল</small></div></div>
 </section>
 
+<section id="gallerySection" style="display:none">
+<h2>Gallery Items</h2><p id="galleryStatus" class="muted">গ্যালারি লোড হচ্ছে…</p><div id="galleryList"></div>
+</section>
+
 <h2 id="account">Member Login</h2>
-<section class="tile" style="gap:12px">
+<section class="tile">
 <p class="muted" style="margin:0">আগে তৈরি করা অ্যাকাউন্ট দিয়ে লগইন করো।</p>
 <form id="loginForm" style="display:grid;gap:10px">
-<input id="loginEmail" type="email" autocomplete="username" placeholder="Email address" required style="width:100%;padding:13px;border-radius:10px;border:1px solid #745727;background:#090909;color:#fff8e8">
-<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Password" required style="width:100%;padding:13px;border-radius:10px;border:1px solid #745727;background:#090909;color:#fff8e8">
+<input id="loginEmail" type="email" autocomplete="username" placeholder="Email address" required>
+<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Password" required>
 <button class="btn" type="submit" style="border:0;cursor:pointer">Login</button>
 </form>
 <button id="resetPassword" type="button" style="background:transparent;border:0;color:var(--gold);text-align:left;padding:4px;cursor:pointer">Forgot password?</button>
@@ -40,16 +45,33 @@ nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-ar
 <button id="logoutButton" type="button" class="btn" style="display:none;border:0;cursor:pointer">Logout</button>
 </section>
 
+<section id="adminPanel" style="display:none">
+<h2>♛ Admin Dashboard</h2>
+<section class="tile">
+<p class="muted" style="margin:0">এখানে মিডিয়ার নাম ও একটি সরাসরি URL যোগ করা যাবে। এই ফর্ম ফাইল আপলোড করে না।</p>
+<form id="mediaForm" style="display:grid;gap:10px">
+<input id="mediaTitle" maxlength="100" placeholder="ছবি / ভিডিওর নাম" required>
+<select id="mediaType"><option value="photo">Photo</option><option value="video">Video</option></select>
+<input id="mediaUrl" type="url" placeholder="https://… মিডিয়ার লিংক" required>
+<textarea id="mediaDescription" maxlength="500" placeholder="ছোট বিবরণ (ঐচ্ছিক)"></textarea>
+<button class="btn" type="submit" style="border:0;cursor:pointer">গ্যালারিতে যোগ করো</button>
+</form>
+<p id="adminMessage" class="muted" role="status" aria-live="polite">শুধু Admin-এর জন্য।</p>
+</section>
+</section>
+
 <h2 id="membership">Premium Membership</h2>
 <section class="tile"><div class="symbol">✦</div><div><b>Monthly Plan — ₹199</b><p class="muted">মাসিক সদস্যপদের প্রস্তাবিত মূল্য। পেমেন্ট ও সদস্যপদ যাচাই এখনো যুক্ত হয়নি।</p><a class="btn" href="mailto:misiroy75@gmail.com?subject=Indian%20Bhabi%20Membership">যোগাযোগ করুন</a></div></section>
-<div class="notice">লগইন Firebase Authentication দিয়ে যুক্ত করা হয়েছে। তবে অ্যাডমিনের অনুমতি, নিরাপদ মিডিয়া আপলোড, পেমেন্ট ও সাবস্ক্রিপশন যাচাই এখনো যুক্ত হয়নি। শুধু নিজের বা ব্যবহারের অনুমতি থাকা মিডিয়া ব্যবহার করুন।</div>
+<div class="notice">Firebase Authentication ও Admin-এর Firestore গ্যালারি রেকর্ড যুক্ত। মিডিয়ার URL অবশ্যই তোমার নিজের বা ব্যবহারের অনুমতি থাকা কনটেন্টের হতে হবে। আসল ফাইল আপলোড, সাধারণ সদস্যদের গ্যালারি অনুমতি, পেমেন্ট ও সাবস্ক্রিপশন যাচাই এখনো চালু নয়।</div>
 </main>
 <nav><a href="#"><span>⌂</span>Home</a><a href="#membership"><span>♛</span>Premium</a><a href="mailto:misiroy75@gmail.com"><span>✉</span>Contact</a></nav>
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 (() => {
+  const ADMIN_EMAIL = "misiroy75@gmail.com";
   const firebaseConfig = {
     apiKey: "AIzaSyDbkxXO00WVwB4QCGiLmoE5wlZnM4oCSPE",
     authDomain: "indian-bhabi-696aa.firebaseapp.com",
@@ -58,58 +80,96 @@ nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-ar
     messagingSenderId: "618265959158",
     appId: "1:618265959158:web:0d960ff3712839bb7fead7"
   };
-  const form = document.getElementById("loginForm");
-  const email = document.getElementById("loginEmail");
-  const password = document.getElementById("loginPassword");
-  const message = document.getElementById("authMessage");
-  const logout = document.getElementById("logoutButton");
-  const reset = document.getElementById("resetPassword");
-  if (!window.firebase) {
-    message.textContent = "Firebase SDK লোড হয়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করো।";
-    return;
-  }
+  const $ = id => document.getElementById(id);
+  const form = $("loginForm"), email = $("loginEmail"), password = $("loginPassword");
+  const message = $("authMessage"), logout = $("logoutButton"), reset = $("resetPassword");
+  const adminPanel = $("adminPanel"), mediaForm = $("mediaForm"), adminMessage = $("adminMessage");
+  const gallerySection = $("gallerySection"), galleryStatus = $("galleryStatus"), galleryList = $("galleryList");
+  if (!window.firebase) { message.textContent = "Firebase SDK লোড হয়নি। ইন্টারনেট সংযোগ পরীক্ষা করো।"; return; }
+
   try {
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      message.textContent = "লগইন হচ্ছে…";
-      try {
-        await auth.signInWithEmailAndPassword(email.value.trim(), password.value);
-        password.value = "";
-      } catch (error) {
-        message.textContent = error.code === "auth/invalid-credential" || error.code === "auth/wrong-password" || error.code === "auth/user-not-found"
-          ? "ইমেল বা পাসওয়ার্ড ঠিক হয়নি। আবার পরীক্ষা করো।"
-          : "লগইন হয়নি: " + (error.message || error.code);
-      }
+    const db = firebase.firestore();
+    let galleryUnsubscribe = null;
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault(); message.textContent = "লগইন হচ্ছে…";
+      try { await auth.signInWithEmailAndPassword(email.value.trim(), password.value); password.value = ""; }
+      catch (error) { message.textContent = error.code === "auth/invalid-credential" || error.code === "auth/wrong-password" || error.code === "auth/user-not-found" ? "ইমেল বা পাসওয়ার্ড ঠিক হয়নি।" : "লগইন হয়নি: " + error.message; }
     });
     reset.addEventListener("click", async () => {
       const address = email.value.trim();
       if (!address) { message.textContent = "আগে ইমেল ঠিকানাটি লেখো।"; return; }
-      try {
-        await auth.sendPasswordResetEmail(address);
-        message.textContent = "পাসওয়ার্ড রিসেটের ইমেল পাঠানো হয়েছে। Inbox দেখো।";
-      } catch (error) {
-        message.textContent = "রিসেট ইমেল পাঠানো যায়নি: " + (error.message || error.code);
-      }
+      try { await auth.sendPasswordResetEmail(address); message.textContent = "পাসওয়ার্ড রিসেটের ইমেল পাঠানো হয়েছে। Inbox দেখো।"; }
+      catch (error) { message.textContent = "রিসেট ইমেল পাঠানো যায়নি: " + error.message; }
     });
     logout.addEventListener("click", () => auth.signOut());
-    auth.onAuthStateChanged((user) => {
+
+    function loadGallery() {
+      if (galleryUnsubscribe) galleryUnsubscribe();
+      gallerySection.style.display = "block";
+      galleryStatus.textContent = "গ্যালারি লোড হচ্ছে…";
+      galleryUnsubscribe = db.collection("gallery").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+        galleryList.replaceChildren();
+        if (snapshot.empty) { galleryStatus.textContent = "এখনো কোনো গ্যালারি আইটেম যোগ করা হয়নি।"; return; }
+        galleryStatus.textContent = "";
+        snapshot.forEach(doc => {
+          const item = doc.data();
+          const card = document.createElement("article"); card.className = "media-card";
+          const heading = document.createElement("b"); heading.textContent = (item.type === "video" ? "▶ ভিডিও: " : "♛ ছবি: ") + (item.title || "Untitled");
+          const desc = document.createElement("p"); desc.className = "muted"; desc.textContent = item.description || "";
+          const link = document.createElement("a"); link.href = item.url; link.target = "_blank"; link.rel = "noopener noreferrer"; link.textContent = "মিডিয়া খুলুন";
+          card.append(heading, desc, link);
+          if (auth.currentUser && auth.currentUser.email === ADMIN_EMAIL) {
+            const del = document.createElement("button"); del.className = "small-btn"; del.textContent = "Delete";
+            del.addEventListener("click", async () => { if (confirm("এই গ্যালারি আইটেম মুছবে?")) { try { await db.collection("gallery").doc(doc.id).delete(); } catch (e) { adminMessage.textContent = "মুছতে সমস্যা: " + e.message; } } });
+            card.append(del);
+          }
+          galleryList.append(card);
+        });
+      }, error => { galleryStatus.textContent = "গ্যালারি পড়া যায়নি: " + error.message; });
+    }
+
+    mediaForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      const user = auth.currentUser;
+      if (!user || user.email !== ADMIN_EMAIL) { adminMessage.textContent = "এই কাজের অনুমতি নেই।"; return; }
+      const url = $("mediaUrl").value.trim();
+      try {
+        new URL(url);
+        adminMessage.textContent = "যোগ করা হচ্ছে…";
+        await db.collection("gallery").add({
+          title: $("mediaTitle").value.trim(),
+          type: $("mediaType").value,
+          url,
+          description: $("mediaDescription").value.trim(),
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        mediaForm.reset(); adminMessage.textContent = "গ্যালারিতে যোগ হয়েছে।";
+      } catch (error) { adminMessage.textContent = "যোগ করা যায়নি: " + error.message; }
+    });
+
+    auth.onAuthStateChanged(user => {
+      if (galleryUnsubscribe) { galleryUnsubscribe(); galleryUnsubscribe = null; }
+      gallerySection.style.display = "none"; galleryList.replaceChildren();
       if (user) {
-        message.textContent = "লগইন হয়েছে: " + user.email + "। এটি এখন শুধু সদস্য লগইন; অ্যাডমিন সুবিধা এখনো সক্রিয় নয়।";
-        form.style.display = "none";
-        reset.style.display = "none";
-        logout.style.display = "inline-block";
+        message.textContent = "লগইন হয়েছে: " + user.email;
+        form.style.display = "none"; reset.style.display = "none"; logout.style.display = "inline-block";
+        if (user.email === ADMIN_EMAIL) {
+          adminPanel.style.display = "block";
+          adminMessage.textContent = "Admin হিসেবে প্রবেশ করা হয়েছে।";
+          loadGallery();
+        } else {
+          adminPanel.style.display = "none";
+          message.textContent += "। Admin Dashboard শুধু নির্দিষ্ট Admin অ্যাকাউন্টের জন্য।";
+        }
       } else {
         message.textContent = "লগইন করতে ইমেল ও পাসওয়ার্ড দাও।";
-        form.style.display = "grid";
-        reset.style.display = "inline-block";
-        logout.style.display = "none";
+        form.style.display = "grid"; reset.style.display = "inline-block"; logout.style.display = "none"; adminPanel.style.display = "none";
       }
     });
-  } catch (error) {
-    message.textContent = "Firebase চালু করা যায়নি: " + (error.message || error.code);
-  }
+  } catch (error) { message.textContent = "Firebase চালু করা যায়নি: " + error.message; }
 })();
 </script>
 <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script>
