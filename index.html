@@ -36,6 +36,7 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 <form id="loginForm"><input id="email" type="email" placeholder="Email address" autocomplete="username" required>
 <input id="password" type="password" placeholder="Password (minimum 6 characters)" minlength="6" required>
 <div class="actions"><button type="submit" id="loginBtn">Login</button><button type="button" class="secondary" id="registerBtn">Create User Account</button><button type="button" class="secondary" id="resetBtn">Forgot password?</button><button type="button" class="secondary hidden" id="logoutBtn">Logout</button></div></form><div class="status" id="authStatus"></div></section>
+<section class="panel hidden" id="adminAnalyticsTop"><h2>App Analytics</h2><div id="analytics" class="muted">লোড হচ্ছে…</div></section>
 <section class="panel hidden" id="profileSection">
 <h2>My Account</h2>
 <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
@@ -72,7 +73,7 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 <hr style="border-color:#3a2e18;margin:20px 0"><h2>Users</h2><p class="muted">সব Registered User-এর তথ্য এখানে দেখা যাবে।</p><button type="button" class="secondary" id="refreshUsersBtn">Refresh Users</button><div id="adminUsers" class="muted">লোড হচ্ছে…</div>
 <hr style="border-color:#3a2e18;margin:20px 0"><h2>Admin Message Inbox</h2><div id="adminInbox" class="muted">লোড হচ্ছে…</div>
 <div id="adminChatArea" class="panel hidden" style="margin-top:14px"><h2 id="adminChatTitle">Reply to User</h2><div id="adminChatMessages"></div><form id="adminSendMessageForm"><textarea id="adminMessageText" rows="2" maxlength="3000" placeholder="Reply লিখুন…" required></textarea><button id="adminSendMessageBtn">Send Reply</button></form><div class="status" id="adminChatStatus"></div></div>
-<hr style="border-color:#3a2e18;margin:20px 0"><h2>App Analytics</h2><div id="analytics" class="muted">লোড হচ্ছে…</div></section>
+</section>
 
 <section class="panel hidden" id="gallerySection"><h2>Gallery</h2><p class="muted">Admin এবং মেয়াদ থাকা Premium সদস্যরা গ্যালারি দেখতে পারবেন।</p>
 <div class="filters"><button class="active" data-filter="all" onclick="setGalleryFilter('all')">All</button><button class="secondary" data-filter="photo" onclick="setGalleryFilter('photo')">Photos</button><button class="secondary" data-filter="video" onclick="setGalleryFilter('video')">Videos</button></div>
@@ -251,6 +252,7 @@ function showRoleDashboard(u){
  $("account").classList.toggle("hidden",loggedIn);
  $("profileSection").classList.toggle("hidden",!loggedIn);
  $("adminPanel").classList.toggle("hidden",!admin);
+ $("adminAnalyticsTop").classList.toggle("hidden",!admin);
  $("userHero").classList.toggle("hidden",!loggedIn||admin);
  $("userTiles").classList.toggle("hidden",!loggedIn||admin);
  ["gallerySection","paymentSection","messagesSection","paymentInfoSection"].forEach(id=>$(id).classList.toggle("hidden",!loggedIn||admin));
