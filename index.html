@@ -44,12 +44,29 @@ nav span{display:block;font-size:20px;margin-bottom:3px}
 <main>
 <section class="hero"><div class="eyebrow">EXCLUSIVE • PREMIUM • MEMBERS</div><h1>স্বাগতম<br>Indian Bhabi-তে</h1><p>একটি প্রিমিয়াম গ্যালারি অভিজ্ঞতা—সুন্দর, সহজ এবং মোবাইলের জন্য তৈরি।</p><a class="btn" href="#membership">মেম্বারশিপ দেখুন →</a></section>
 <h2>Explore Gallery</h2>
+
 <section class="grid">
-<div class="tile"><div class="symbol">♛</div><div><b>Photo Gallery</b><br><small>প্রিমিয়াম ছবির সংগ্রহ</small></div></div>
-<div class="tile"><div class="symbol">▶</div><div><b>Video Gallery</b><br><small>সদস্যদের জন্য ভিডিও</small></div></div>
-<div class="tile"><div class="symbol">✧</div><div><b>New Arrivals</b><br><small>নতুন কনটেন্টের আপডেট</small></div></div>
-<div class="tile"><div class="symbol">♙</div><div><b>My Account</b><br><small>সদস্যপদ ও প্রোফাইল</small></div></div>
+<a class="tile" href="#gallerySection" onclick="setGalleryFilter('photo')">
+<div class="symbol">♛</div>
+<div><b>Photo Gallery</b><br><small>প্রিমিয়াম ছবির সংগ্রহ</small></div>
+</a>
+
+<a class="tile" href="#gallerySection" onclick="setGalleryFilter('video')">
+<div class="symbol">▶</div>
+<div><b>Video Gallery</b><br><small>সদস্যদের জন্য ভিডিও</small></div>
+</a>
+
+<a class="tile" href="#gallerySection" onclick="setGalleryFilter('all')">
+<div class="symbol">✧</div>
+<div><b>New Arrivals</b><br><small>নতুন কনটেন্টের আপডেট</small></div>
+</a>
+
+<a class="tile" href="#account">
+<div class="symbol">♙</div>
+<div><b>My Account</b><br><small>সদস্যপদ ও প্রোফাইল</small></div>
+</a>
 </section>
+
 
 <section id="gallerySection" style="display:none">
 <h2>Gallery Items</h2><p id="galleryStatus" class="muted">গ্যালারি লোড হচ্ছে…</p><div id="galleryList"></div>
@@ -149,7 +166,18 @@ nav span{display:block;font-size:20px;margin-bottom:3px}
     });
     logout.addEventListener("click", () => auth.signOut());
 
-    function loadGallery() {
+    let activeGalleryFilter = "all";
+
+window.setGalleryFilter = function(filter) {
+  activeGalleryFilter = filter;
+  gallerySection.style.display = "block";
+  if (auth.currentUser && auth.currentUser.email === ADMIN_EMAIL) {
+    loadGallery();
+  }
+  gallerySection.scrollIntoView({behavior: "smooth"});
+};
+
+function loadGallery() {
       if (galleryUnsubscribe) galleryUnsubscribe();
       gallerySection.style.display = "block";
       galleryStatus.textContent = "গ্যালারি লোড হচ্ছে…";
@@ -157,8 +185,11 @@ nav span{display:block;font-size:20px;margin-bottom:3px}
         galleryList.replaceChildren();
         if (snapshot.empty) { galleryStatus.textContent = "এখনো কোনো গ্যালারি আইটেম যোগ করা হয়নি।"; return; }
         galleryStatus.textContent = "";
+        let visibleCount = 0;
         for (const doc of snapshot.docs) {
           const item = doc.data();
+          const itemType = item.type === "video" ? "video" : "photo";
+if (activeGalleryFilter !== "all" && activeGalleryFilter !== itemType) continue;
           const card = document.createElement("article"); card.className = "media-card";
           const heading = document.createElement("b"); heading.textContent = (item.type === "video" ? "▶ ভিডিও: " : "♛ ছবি: ") + (item.title || "Untitled");
           const desc = document.createElement("p"); desc.className = "muted"; desc.textContent = item.description || "";
@@ -184,7 +215,14 @@ nav span{display:block;font-size:20px;margin-bottom:3px}
             card.append(del);
           }
           galleryList.append(card);
-        }
+          visibleCount++;
+        }if (!visibleCount) {
+  galleryStatus.textContent = activeGalleryFilter === "photo"
+    ? "এখনো কোনো ছবি যোগ করা হয়নি।"
+    : activeGalleryFilter === "video"
+    ? "এখনো কোনো ভিডিও যোগ করা হয়নি।"
+    : "কোনো আইটেম পাওয়া যায়নি।";
+}
       }, error => { galleryStatus.textContent = "গ্যালারি পড়া যায়নি: " + error.message; });
     }
 
