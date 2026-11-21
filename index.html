@@ -30,6 +30,7 @@
     button,.btn{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(135deg,#f0d18a,#b9852e);color:#171109;font-weight:bold;cursor:pointer}
     button.secondary{background:#24211b;color:var(--gold2);border:1px solid var(--line)}
     button.danger{background:#4a1717;color:#fff}
+    button:disabled{opacity:.55;cursor:not-allowed}
     .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
     .filters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
     .filters button{padding:9px 13px}
@@ -68,12 +69,14 @@
   </section>
 
   <section class="panel" id="account">
-    <h2>Account Login</h2>
+    <h2>Account Login / Registration</h2>
+    <p class="muted">আগে Email ও Password লিখে Login করুন অথবা নতুন অ্যাকাউন্ট তৈরি করুন। Password কমপক্ষে ৬ অক্ষরের হতে হবে।</p>
     <form id="loginForm">
       <input id="email" type="email" placeholder="Email address" autocomplete="username" required>
-      <input id="password" type="password" placeholder="Password" autocomplete="current-password" required>
+      <input id="password" type="password" placeholder="Password (minimum 6 characters)" autocomplete="current-password" minlength="6" required>
       <div class="actions">
-        <button type="submit">Login</button>
+        <button type="submit" id="loginBtn">Login</button>
+        <button type="button" class="secondary" id="registerBtn">Create User Account</button>
         <button type="button" class="secondary" id="resetBtn">Forgot password?</button>
         <button type="button" class="secondary hidden" id="logoutBtn">Logout</button>
       </div>
@@ -104,7 +107,7 @@
 
   <section class="panel" id="gallerySection">
     <h2>Gallery</h2>
-    <p class="muted">বর্তমানে নিরাপত্তার কারণে গ্যালারি শুধু Admin লগইন করলে দেখা যাবে।</p>
+    <p class="muted">নিরাপত্তার কারণে গ্যালারি বর্তমানে শুধু Admin লগইন করলে দেখা যাবে। User account তৈরি করলেই Premium Gallery খুলবে না।</p>
     <div class="filters">
       <button class="active" data-filter="all" onclick="setGalleryFilter('all')">All</button>
       <button class="secondary" data-filter="photo" onclick="setGalleryFilter('photo')">Photos</button>
@@ -117,7 +120,7 @@
   <section class="panel" style="text-align:center">
     <h2>Premium Membership</h2>
     <div class="price">₹199 / month</div>
-    <p class="muted">সাবস্ক্রিপশন পেমেন্ট ব্যবস্থা এখনো চালু হয়নি।</p>
+    <p class="muted">সাবস্ক্রিপশন পেমেন্ট এখনো চালু হয়নি। পেমেন্ট যাচাই ও নিরাপদ সদস্য-অনুমতি চালুর পর Premium access দেওয়া হবে।</p>
   </section>
 </main>
 
@@ -184,6 +187,38 @@ $("loginForm").addEventListener("submit", async event => {
     setStatus("authStatus","লগইন সফল হয়েছে।");
   } catch (error) {
     setStatus("authStatus","লগইন হয়নি: " + error.message);
+  }
+});
+
+$("registerBtn").addEventListener("click", async () => {
+  const email = $("email").value.trim();
+  const password = $("password").value;
+  if (!email) {
+    setStatus("authStatus","আগে Email address লিখুন।");
+    $("email").focus();
+    return;
+  }
+  if (password.length < 6) {
+    setStatus("authStatus","Password কমপক্ষে ৬ অক্ষরের হতে হবে।");
+    $("password").focus();
+    return;
+  }
+
+  const button = $("registerBtn");
+  button.disabled = true;
+  $("loginBtn").disabled = true;
+  setStatus("authStatus","নতুন অ্যাকাউন্ট তৈরি হচ্ছে…");
+  try {
+    const credential = await auth.createUserWithEmailAndPassword(email,password);
+    await credential.user.sendEmailVerification();
+    await auth.signOut();
+    $("password").value = "";
+    setStatus("authStatus","অ্যাকাউন্ট তৈরি হয়েছে! আপনার ইমেইলে পাঠানো Verification link খুলে Email যাচাই করুন। তারপর Login করুন। Premium Gallery access পেমেন্ট ব্যবস্থা চালুর পর দেওয়া হবে।");
+  } catch (error) {
+    setStatus("authStatus","অ্যাকাউন্ট তৈরি হয়নি: " + error.message);
+  } finally {
+    button.disabled = false;
+    $("loginBtn").disabled = false;
   }
 });
 
@@ -367,10 +402,13 @@ auth.onAuthStateChanged(user => {
   $("logoutBtn").classList.toggle("hidden",!user);
   $("email").disabled = !!user;
   $("password").disabled = !!user;
+  $("loginBtn").classList.toggle("hidden",!!user);
+  $("registerBtn").classList.toggle("hidden",!!user);
+  $("resetBtn").classList.toggle("hidden",!!user);
   if (user) {
-    setStatus("authStatus",admin ? "Admin হিসেবে লগইন করা হয়েছে।" : "লগইন হয়েছে, তবে এই অ্যাকাউন্ট Admin নয়।");
+    setStatus("authStatus",admin ? "Admin হিসেবে লগইন করা হয়েছে।" : "User হিসেবে লগইন হয়েছে। Premium Gallery এখনো সক্রিয় নয়।");
   } else {
-    setStatus("authStatus","লগইন করুন।");
+    setStatus("authStatus","লগইন করুন অথবা নতুন User Account তৈরি করুন।");
   }
   if (galleryUnsubscribe) { galleryUnsubscribe(); galleryUnsubscribe = null; }
   loadGallery();
