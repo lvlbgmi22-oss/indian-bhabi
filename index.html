@@ -114,7 +114,7 @@ footer{text-align:center;color:#777;font-size:12px;padding:22px 10px;border-top:
 
   <section class="panel" id="gallerySection">
     <h2>Gallery</h2>
-    <p class="muted">নিরাপত্তার কারণে গ্যালারি বর্তমানে শুধু Admin লগইন করলে দেখা যাবে। User account তৈরি করলেই Premium Gallery খুলবে না।</p>
+    <p class="muted">Admin এবং মেয়াদ থাকা Premium সদস্যরা গ্যালারি দেখতে পারবেন। সাধারণ User-এর জন্য গ্যালারি বন্ধ থাকবে।</p>
     <div class="filters">
       <button class="active" data-filter="all" onclick="setGalleryFilter('all')">All</button>
       <button class="secondary" data-filter="photo" onclick="setGalleryFilter('photo')">Photos</button>
@@ -189,6 +189,15 @@ let activeGalleryFilter = "all";
 
 function isAdminUser(user = auth.currentUser) {
   return !!user && (user.email || "").toLowerCase() === ADMIN_EMAIL;
+}
+async function hasActivePremium(user = auth.currentUser) {
+  if (!user) return false;
+  if (isAdminUser(user)) return true;
+  const snap = await db.collection("users").doc(user.uid).get();
+  if (!snap.exists) return false;
+  const data = snap.data() || {};
+  const expiry = data.premiumUntil;
+  return data.premium === true && !!expiry && typeof expiry.toMillis === "function" && expiry.toMillis() > Date.now();
 }
 function setStatus(id, message) { $(id).textContent = message; }
 
@@ -307,9 +316,23 @@ $("urlForm").addEventListener("submit", async event => {
 async function getMediaUrl(item) {
   if (item.url) return item.url;
   if (!item.storagePath) return "";
-  const { data, error } = await supabaseClient.storage.from(BUCKET).createSignedUrl(item.storagePath, 3600);
-  if (error) throw error;
-  return data.signedUrl;
+  const user = auth.currentUser;
+  if (!user) throw new Error("Login required");
+  const token = await user.getIdToken(true);
+  const response = await fetch(SUPABASE_URL + "/functions/v1/quick-action", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_PUBLISHABLE_KEY,
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({ storagePath: item.storagePath })
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok || !result.success || !result.signedUrl) {
+    throw new Error(result.error || "Premium access could not be verified");
+  }
+  return result.signedUrl;
 }
 
 function makeMediaCard(doc, item, mediaUrl) {
@@ -330,6 +353,7 @@ function makeMediaCard(doc, item, mediaUrl) {
   actions.append(open);
 
   const remove = document.createElement("button"); remove.type = "button"; remove.className = "danger"; remove.textContent = "Delete";
+  if (!isAdminUser()) remove.classList.add("hidden");
   remove.addEventListener("click", async () => {
     if (!isAdminUser() || !confirm("এই মিডিয়াটি মুছে ফেলবেন?")) return;
     remove.disabled = true;
@@ -346,15 +370,23 @@ function makeMediaCard(doc, item, mediaUrl) {
   return card;
 }
 
-function loadGallery() {
+async function loadGallery() {
   if (galleryUnsubscribe) galleryUnsubscribe();
   galleryUnsubscribe = null;
-  if (!isAdminUser()) {
-    $("galleryList").replaceChildren();
-    setStatus("galleryStatus","গ্যালারি দেখতে Admin লগইন করুন।");
+  $("galleryList").replaceChildren();
+  const user = auth.currentUser;
+  if (!user) {
+    setStatus("galleryStatus","গ্যালারি দেখতে Login করে Premium Membership নিতে হবে।");
     return;
   }
-  $("galleryList").replaceChildren();
+  setStatus("galleryStatus","Premium membership যাচাই হচ্ছে…");
+  let allowed = false;
+  try { allowed = await hasActivePremium(user); }
+  catch (error) { setStatus("galleryStatus","Membership যাচাই করা যায়নি: " + error.message); return; }
+  if (!allowed) {
+    setStatus("galleryStatus","Premium Membership সক্রিয় হলে গ্যালারি খুলবে। ₹199 দিয়ে ৩০ দিনের Premium নিন।");
+    return;
+  }
   setStatus("galleryStatus","গ্যালারি লোড হচ্ছে…");
   galleryUnsubscribe = db.collection("gallery").orderBy("createdAt","desc").onSnapshot(async snapshot => {
     $("galleryList").replaceChildren();
