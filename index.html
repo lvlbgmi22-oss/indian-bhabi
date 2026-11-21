@@ -1,297 +1,384 @@
 <!doctype html>
 <html lang="bn">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#090909">
-<meta name="description" content="Indian Bhabi premium gallery">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon.svg">
-<title>Indian Bhabi</title>
-<style>
-:root{--gold:#d8b35e;--cream:#f5e5b6;--muted:#b7aa8e}
-*{box-sizing:border-box}
-body{margin:0;background:radial-gradient(ellipse at top,#302313 0,#090909 55%);color:#fff8e8;font-family:system-ui,"Noto Sans Bengali",sans-serif;min-height:100vh}
-header{padding:20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #594522}
-.brand{font:700 22px Georgia,serif;letter-spacing:1.5px;color:var(--cream)}
-.crown{color:var(--gold)}
-main{max-width:760px;margin:auto;padding:24px 17px 105px}
-.hero{padding:30px 22px;border:1px solid #745727;border-radius:22px;background:linear-gradient(135deg,#2a1e0d,#111);box-shadow:0 15px 40px #0008}
-.eyebrow{color:var(--gold);font-size:11px;letter-spacing:3px;font-weight:800}
-.hero h1{font:700 36px/1.15 Georgia,serif;color:var(--cream);margin:13px 0}
-.hero p,.muted{color:var(--muted);line-height:1.7}
-.btn{display:inline-block;background:linear-gradient(100deg,#b88932,#f3dc99);color:#171109;padding:13px 20px;border-radius:30px;text-decoration:none;font-weight:800;margin-top:10px}
-h2{font:700 24px Georgia,serif;color:var(--cream);margin:30px 0 14px}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
-.tile{min-height:145px;padding:17px;border:1px solid #4e3c20;border-radius:17px;background:linear-gradient(145deg,#211b12,#111);display:flex;flex-direction:column;justify-content:space-between;gap:12px}
-.symbol{font-size:29px;color:var(--gold)}
-.tile small{color:var(--muted);line-height:1.5}
-.notice{margin-top:22px;border:1px solid #4e3c20;border-radius:15px;padding:15px;color:#c9bb99;font-size:13px;line-height:1.7}
-input,select,textarea{width:100%;padding:13px;border-radius:10px;border:1px solid #745727;background:#090909;color:#fff8e8;font:inherit}
-textarea{min-height:75px;resize:vertical}
-button{font:inherit}
-nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;background:#0c0c0cf5;border-top:1px solid #594522;padding:12px 6px calc(12px + env(safe-area-inset-bottom));backdrop-filter:blur(12px)}
-nav a{color:var(--cream);font-size:12px;text-decoration:none;text-align:center}
-nav span{display:block;font-size:20px;margin-bottom:3px}
-.media-card{border:1px solid #4e3c20;border-radius:13px;padding:13px;margin-top:10px;background:#17130d;overflow-wrap:anywhere}
-.media-card a{color:var(--gold)}
-.small-btn{background:transparent;border:1px solid #795c2a;color:#f5e5b6;border-radius:8px;padding:7px 10px;margin-top:8px}
-@media(min-width:600px){.hero{padding:42px}.hero h1{font-size:46px}.grid{grid-template-columns:repeat(3,1fr)}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#090909">
+  <meta name="description" content="Indian Bhabi - Black and Gold Gallery">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg">
+  <title>Indian Bhabi</title>
+  <style>
+    :root{--bg:#090909;--panel:#151515;--gold:#d7ad55;--gold2:#f3d58b;--muted:#aaa;--line:#3a2e18}
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(circle at top,#211a0d 0,#090909 42%);color:#f7f2e8;font-family:Arial,sans-serif;min-height:100vh}
+    header{padding:24px 16px 18px;text-align:center;border-bottom:1px solid var(--line)}
+    .brand{font-family:Georgia,serif;font-size:clamp(30px,8vw,46px);font-weight:bold;letter-spacing:2px;color:var(--gold2);text-shadow:0 0 18px #a8792544}
+    .tag{color:var(--muted);font-size:12px;letter-spacing:3px;margin-top:7px}
+    main{width:min(960px,100%);margin:auto;padding:18px 14px 42px}
+    h2{color:var(--gold2);font-family:Georgia,serif;margin:12px 0}
+    p{line-height:1.5}
+    .hero{padding:24px 16px;text-align:center;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#1b170f,#101010);margin-bottom:18px}
+    .hero p{color:#c9c0ad;margin:8px 0 0}
+    .tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0 22px}
+    .tile{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 10px;text-align:center;color:var(--gold2);font-weight:bold;cursor:pointer}
+    .tile span{display:block;font-size:25px;margin-bottom:8px}
+    .panel{background:#111;border:1px solid var(--line);border-radius:16px;padding:16px;margin:14px 0}
+    input,textarea,button{font:inherit}
+    input,textarea{width:100%;padding:13px;margin:7px 0;background:#080808;color:#fff;border:1px solid #514126;border-radius:9px;outline:none}
+    input:focus,textarea:focus{border-color:var(--gold)}
+    button,.btn{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(135deg,#f0d18a,#b9852e);color:#171109;font-weight:bold;cursor:pointer}
+    button.secondary{background:#24211b;color:var(--gold2);border:1px solid var(--line)}
+    button.danger{background:#4a1717;color:#fff}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .filters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+    .filters button{padding:9px 13px}
+    .filters button.active{outline:2px solid var(--gold2)}
+    .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}
+    .media-card{background:#171717;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+    .media-card img,.media-card video{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:#050505}
+    .media-info{padding:10px}
+    .media-info strong{display:block;color:var(--gold2);overflow-wrap:anywhere}
+    .media-info small{display:block;color:var(--muted);margin-top:5px}
+    .status{font-size:13px;color:var(--gold2);min-height:20px;white-space:pre-wrap}
+    .muted{color:var(--muted);font-size:13px}
+    .hidden{display:none!important}
+    footer{text-align:center;color:#777;font-size:12px;padding:22px 10px;border-top:1px solid var(--line)}
+    .price{font-size:25px;color:var(--gold2);font-weight:bold}
+    @media(min-width:650px){.tiles{grid-template-columns:repeat(4,1fr)}}
+  </style>
 </head>
 <body>
-<header><div class="brand">INDIAN BHABI</div><div class="crown">✦ PREMIUM</div></header>
+<header>
+  <div class="brand">INDIAN BHABI</div>
+  <div class="tag">PREMIUM • BLACK & GOLD</div>
+</header>
+
 <main>
-<section class="hero"><div class="eyebrow">EXCLUSIVE • PREMIUM • MEMBERS</div><h1>স্বাগতম<br>Indian Bhabi-তে</h1><p>একটি প্রিমিয়াম গ্যালারি অভিজ্ঞতা—সুন্দর, সহজ এবং মোবাইলের জন্য তৈরি।</p><a class="btn" href="#membership">মেম্বারশিপ দেখুন →</a></section>
-<h2>Explore Gallery</h2>
+  <section class="hero">
+    <h2>Welcome to Indian Bhabi</h2>
+    <p>একটি Black & Gold প্রিমিয়াম গ্যালারি</p>
+  </section>
 
-<section class="grid">
-<a class="tile" href="#gallerySection" onclick="setGalleryFilter('photo')">
-<div class="symbol">♛</div>
-<div><b>Photo Gallery</b><br><small>প্রিমিয়াম ছবির সংগ্রহ</small></div>
-</a>
+  <section class="tiles">
+    <div class="tile" onclick="setGalleryFilter('photo')"><span>▧</span>Photo Gallery</div>
+    <div class="tile" onclick="setGalleryFilter('video')"><span>▶</span>Video Gallery</div>
+    <div class="tile" onclick="setGalleryFilter('all')"><span>✦</span>All Media</div>
+    <div class="tile" onclick="document.getElementById('account').scrollIntoView({behavior:'smooth'})"><span>♙</span>My Account</div>
+  </section>
 
-<a class="tile" href="#gallerySection" onclick="setGalleryFilter('video')">
-<div class="symbol">▶</div>
-<div><b>Video Gallery</b><br><small>সদস্যদের জন্য ভিডিও</small></div>
-</a>
+  <section class="panel" id="account">
+    <h2>Account Login</h2>
+    <form id="loginForm">
+      <input id="email" type="email" placeholder="Email address" autocomplete="username" required>
+      <input id="password" type="password" placeholder="Password" autocomplete="current-password" required>
+      <div class="actions">
+        <button type="submit">Login</button>
+        <button type="button" class="secondary" id="resetBtn">Forgot password?</button>
+        <button type="button" class="secondary hidden" id="logoutBtn">Logout</button>
+      </div>
+    </form>
+    <div class="status" id="authStatus" aria-live="polite"></div>
+  </section>
 
-<a class="tile" href="#gallerySection" onclick="setGalleryFilter('all')">
-<div class="symbol">✧</div>
-<div><b>New Arrivals</b><br><small>নতুন কনটেন্টের আপডেট</small></div>
-</a>
+  <section class="panel hidden" id="adminPanel">
+    <h2>Admin Dashboard</h2>
+    <p class="muted">এখান থেকে ছবি বা ভিডিও আপলোড করতে পারবে। সর্বোচ্চ ফাইল সাইজ ৫০ MB।</p>
+    <form id="uploadForm">
+      <input id="mediaTitle" type="text" placeholder="Media title" required>
+      <input id="mediaFile" type="file" accept="image/*,video/*" required>
+      <textarea id="mediaDescription" rows="2" placeholder="Description (optional)"></textarea>
+      <button type="submit">Upload Media</button>
+    </form>
+    <div class="status" id="uploadStatus" aria-live="polite"></div>
+    <hr style="border-color:#3a2e18;margin:20px 0">
+    <h2>Add Media URL</h2>
+    <form id="urlForm">
+      <input id="urlTitle" type="text" placeholder="Media title" required>
+      <input id="mediaUrl" type="url" placeholder="https://example.com/image.jpg" required>
+      <textarea id="urlDescription" rows="2" placeholder="Description (optional)"></textarea>
+      <button type="submit">Add URL</button>
+    </form>
+    <div class="status" id="urlStatus" aria-live="polite"></div>
+  </section>
 
-<a class="tile" href="#account">
-<div class="symbol">♙</div>
-<div><b>My Account</b><br><small>সদস্যপদ ও প্রোফাইল</small></div>
-</a>
-</section>
+  <section class="panel" id="gallerySection">
+    <h2>Gallery</h2>
+    <p class="muted">বর্তমানে নিরাপত্তার কারণে গ্যালারি শুধু Admin লগইন করলে দেখা যাবে।</p>
+    <div class="filters">
+      <button class="active" data-filter="all" onclick="setGalleryFilter('all')">All</button>
+      <button class="secondary" data-filter="photo" onclick="setGalleryFilter('photo')">Photos</button>
+      <button class="secondary" data-filter="video" onclick="setGalleryFilter('video')">Videos</button>
+    </div>
+    <div class="status" id="galleryStatus">গ্যালারি দেখতে Admin লগইন করুন।</div>
+    <div class="gallery" id="galleryList"></div>
+  </section>
 
-
-<section id="gallerySection" style="display:none">
-<h2>Gallery Items</h2><p id="galleryStatus" class="muted">গ্যালারি লোড হচ্ছে…</p><div id="galleryList"></div>
-</section>
-
-<h2 id="account">Member Login</h2>
-<section class="tile">
-<p class="muted" style="margin:0">আগে তৈরি করা অ্যাকাউন্ট দিয়ে লগইন করো।</p>
-<form id="loginForm" style="display:grid;gap:10px">
-<input id="loginEmail" type="email" autocomplete="username" placeholder="Email address" required>
-<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Password" required>
-<button class="btn" type="submit" style="border:0;cursor:pointer">Login</button>
-</form>
-<button id="resetPassword" type="button" style="background:transparent;border:0;color:var(--gold);text-align:left;padding:4px;cursor:pointer">Forgot password?</button>
-<p id="authMessage" class="muted" role="status" aria-live="polite" style="margin:0">Firebase login প্রস্তুত হচ্ছে…</p>
-<button id="logoutButton" type="button" class="btn" style="display:none;border:0;cursor:pointer">Logout</button>
-</section>
-
-<section id="adminPanel" style="display:none">
-<h2>♛ Admin Dashboard</h2>
-<section class="tile">
-<p class="muted" style="margin:0">মোবাইলের Gallery থেকে ছবি বা ভিডিও সরাসরি আপলোড করো। সর্বোচ্চ ফাইল সাইজ ৫০ MB।</p>
-<form id="uploadForm" style="display:grid;gap:10px">
-<input id="uploadFile" type="file" accept="image/*,video/*" required>
-<button class="btn" type="submit" style="border:0;cursor:pointer">ছবি / ভিডিও Upload</button>
-</form>
-<p id="uploadMessage" class="muted" role="status" aria-live="polite">শুধু Admin আপলোড করতে পারবে।</p>
-<div style="height:1px;background:#4e3c20;margin:8px 0"></div>
-<p class="muted" style="margin:0">বিকল্পভাবে মিডিয়ার সরাসরি URL-ও যোগ করতে পারো।</p>
-<form id="mediaForm" style="display:grid;gap:10px">
-<input id="mediaTitle" maxlength="100" placeholder="ছবি / ভিডিওর নাম" required>
-<select id="mediaType"><option value="photo">Photo</option><option value="video">Video</option></select>
-<input id="mediaUrl" type="url" placeholder="https://… মিডিয়ার লিংক" required>
-<textarea id="mediaDescription" maxlength="500" placeholder="ছোট বিবরণ (ঐচ্ছিক)"></textarea>
-<button class="btn" type="submit" style="border:0;cursor:pointer">গ্যালারিতে যোগ করো</button>
-</form>
-<p id="adminMessage" class="muted" role="status" aria-live="polite">শুধু Admin-এর জন্য।</p>
-</section>
-</section>
-
-<h2 id="membership">Premium Membership</h2>
-<section class="tile"><div class="symbol">✦</div><div><b>Monthly Plan — ₹199</b><p class="muted">মাসিক সদস্যপদের প্রস্তাবিত মূল্য। পেমেন্ট ও সদস্যপদ যাচাই এখনো যুক্ত হয়নি।</p><a class="btn" href="mailto:misiroy75@gmail.com?subject=Indian%20Bhabi%20Membership">যোগাযোগ করুন</a></div></section>
-<div class="notice">Firebase Authentication, Admin-এর Firestore গ্যালারি রেকর্ড এবং Supabase Storage upload যুক্ত। Supabase bucket private—ফাইলের preview শুধু Admin দেখতে পারবে। সাধারণ সদস্যদের গ্যালারি অনুমতি, পেমেন্ট ও সাবস্ক্রিপশন যাচাই এখনো চালু নয়।</div>
+  <section class="panel" style="text-align:center">
+    <h2>Premium Membership</h2>
+    <div class="price">₹199 / month</div>
+    <p class="muted">সাবস্ক্রিপশন পেমেন্ট ব্যবস্থা এখনো চালু হয়নি।</p>
+  </section>
 </main>
-<nav><a href="#"><span>⌂</span>Home</a><a href="#membership"><span>♛</span>Premium</a><a href="mailto:misiroy75@gmail.com"><span>✉</span>Contact</a></nav>
+
+<footer>© Indian Bhabi • Use only content you own or have permission to share.</footer>
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-(() => {
-  const ADMIN_EMAIL = "misiroy75@gmail.com";
-  const SUPABASE_URL = "https://pcqnieukazuctminsufb.supabase.co";
-  // Publishable key is intended for browser use. Never put a Supabase secret/service_role key here.
-  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_GOzDPU4_viTeY6EuidkzLQ_xfrE3hML";
-  const STORAGE_BUCKET = "indian-bhabi-media";
-  const firebaseConfig = {
-    apiKey: "AIzaSyBaVQ2SBgAn3EFuFCrAlWvHupGWXUVRqk0",
-    authDomain: "indian-bhabi-696aa.firebaseapp.com",
-    projectId: "indian-bhabi-696aa",
-    storageBucket: "indian-bhabi-696aa.firebasestorage.app",
-    messagingSenderId: "618265959158",
-    appId: "1:618265959158:web:6339f322dfcc10157fead7"
-  };
-  const $ = id => document.getElementById(id);
-  const form = $("loginForm"), email = $("loginEmail"), password = $("loginPassword");
-  const message = $("authMessage"), logout = $("logoutButton"), reset = $("resetPassword");
-  const adminPanel = $("adminPanel"), mediaForm = $("mediaForm"), adminMessage = $("adminMessage");
-  const gallerySection = $("gallerySection"), galleryStatus = $("galleryStatus"), galleryList = $("galleryList");
-  const uploadForm = $("uploadForm"), uploadMessage = $("uploadMessage");
-  if (!window.firebase) { message.textContent = "Firebase SDK লোড হয়নি। ইন্টারনেট সংযোগ পরীক্ষা করো।"; return; }
+"use strict";
 
-  try {
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    if (!window.supabase || !window.supabase.createClient) throw new Error("Supabase SDK লোড হয়নি।");
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-      accessToken: async () => {
-        const current = auth.currentUser;
-        return current ? await current.getIdToken() : null;
-      }
-    });
-    let galleryUnsubscribe = null;
-
-    form.addEventListener("submit", async event => {
-      event.preventDefault(); message.textContent = "লগইন হচ্ছে…";
-      try { await auth.signInWithEmailAndPassword(email.value.trim(), password.value); password.value = ""; }
-      catch (error) { message.textContent = error.code === "auth/invalid-credential" || error.code === "auth/wrong-password" || error.code === "auth/user-not-found" ? "ইমেল বা পাসওয়ার্ড ঠিক হয়নি।" : "লগইন হয়নি: " + error.message; }
-    });
-    reset.addEventListener("click", async () => {
-      const address = email.value.trim();
-      if (!address) { message.textContent = "আগে ইমেল ঠিকানাটি লেখো।"; return; }
-      try { await auth.sendPasswordResetEmail(address); message.textContent = "পাসওয়ার্ড রিসেটের ইমেল পাঠানো হয়েছে। Inbox দেখো।"; }
-      catch (error) { message.textContent = "রিসেট ইমেল পাঠানো যায়নি: " + error.message; }
-    });
-    logout.addEventListener("click", () => auth.signOut());
-
-    let activeGalleryFilter = "all";
-
-window.setGalleryFilter = function(filter) {
-  activeGalleryFilter = filter;
-  gallerySection.style.display = "block";
-  if (auth.currentUser && auth.currentUser.email === ADMIN_EMAIL) {
-    loadGallery();
-  }
-  gallerySection.scrollIntoView({behavior: "smooth"});
+const firebaseConfig = {
+  apiKey: "AIzaSyBaVQ2SBgAn3EFuFCrAlWvHupGWXUVRqk0",
+  authDomain: "indian-bhabi-696aa.firebaseapp.com",
+  projectId: "indian-bhabi-696aa",
+  storageBucket: "indian-bhabi-696aa.firebasestorage.app",
+  messagingSenderId: "618265959158",
+  appId: "1:618265959158:web:6339f322dfcc10157fead7"
 };
 
-function loadGallery() {
-      if (galleryUnsubscribe) galleryUnsubscribe();
-      gallerySection.style.display = "block";
-      galleryStatus.textContent = "গ্যালারি লোড হচ্ছে…";
-      galleryUnsubscribe = db.collection("gallery").orderBy("createdAt", "desc").onSnapshot(async snapshot => {
-        galleryList.replaceChildren();
-        if (snapshot.empty) { galleryStatus.textContent = "এখনো কোনো গ্যালারি আইটেম যোগ করা হয়নি।"; return; }
-        galleryStatus.textContent = "";
-        let visibleCount = 0;
-        for (const doc of snapshot.docs) {
-          const item = doc.data();
-          const itemType = item.type === "video" ? "video" : "photo";
-if (activeGalleryFilter !== "all" && activeGalleryFilter !== itemType) continue;
-          const card = document.createElement("article"); card.className = "media-card";
-          const heading = document.createElement("b"); heading.textContent = (item.type === "video" ? "▶ ভিডিও: " : "♛ ছবি: ") + (item.title || "Untitled");
-          const desc = document.createElement("p"); desc.className = "muted"; desc.textContent = item.description || "";
-          const link = document.createElement("a"); link.target = "_blank"; link.rel = "noopener noreferrer"; link.textContent = "মিডিয়া খুলুন";
-          if (item.storagePath) {
-            const signed = await supabaseClient.storage.from(STORAGE_BUCKET).createSignedUrl(item.storagePath, 3600);
-            if (!signed.error && signed.data && signed.data.signedUrl) link.href = signed.data.signedUrl;
-            else { link.textContent = "Preview পাওয়া যায়নি"; link.removeAttribute("href"); }
-          } else { link.href = item.url; }
-          card.append(heading, desc, link);
-          if (auth.currentUser && auth.currentUser.email === ADMIN_EMAIL) {
-            const del = document.createElement("button"); del.className = "small-btn"; del.textContent = "Delete";
-            del.addEventListener("click", async () => {
-              if (!confirm("এই গ্যালারি আইটেম মুছবে?")) return;
-              try {
-                if (item.storagePath) {
-                  const removed = await supabaseClient.storage.from(STORAGE_BUCKET).remove([item.storagePath]);
-                  if (removed.error) throw removed.error;
-                }
-                await db.collection("gallery").doc(doc.id).delete();
-              } catch (e) { adminMessage.textContent = "মুছতে সমস্যা: " + e.message; }
-            });
-            card.append(del);
-          }
-          galleryList.append(card);
-          visibleCount++;
-        }if (!visibleCount) {
-  galleryStatus.textContent = activeGalleryFilter === "photo"
-    ? "এখনো কোনো ছবি যোগ করা হয়নি।"
-    : activeGalleryFilter === "video"
-    ? "এখনো কোনো ভিডিও যোগ করা হয়নি।"
-    : "কোনো আইটেম পাওয়া যায়নি।";
+const ADMIN_EMAIL = "misiroy75@gmail.com";
+const SUPABASE_URL = "https://pcqnieukazuctminsufb.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_GOzDPU4_viTeY6EuidkzLQ_xfrE3hML";
+const BUCKET = "indian-bhabi-media";
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  accessToken: async () => {
+    const current = auth.currentUser;
+    return current ? await current.getIdToken() : null;
+  }
+});
+
+const $ = id => document.getElementById(id);
+let galleryUnsubscribe = null;
+let activeGalleryFilter = "all";
+
+function isAdminUser(user = auth.currentUser) {
+  return !!user && (user.email || "").toLowerCase() === ADMIN_EMAIL;
 }
-      }, error => { galleryStatus.textContent = "গ্যালারি পড়া যায়নি: " + error.message; });
-    }
+function setStatus(id, message) { $(id).textContent = message; }
+function setGalleryFilter(filter) {
+  activeGalleryFilter = ["all","photo","video"].includes(filter) ? filter : "all";
+  document.querySelectorAll("[data-filter]").forEach(button => {
+    const active = button.dataset.filter === activeGalleryFilter;
+    button.classList.toggle("active", active);
+    button.classList.toggle("secondary", !active);
+  });
+  if (isAdminUser()) loadGallery();
+  else setStatus("galleryStatus", "গ্যালারি দেখতে Admin লগইন করুন।");
+  $("gallerySection").scrollIntoView({behavior:"smooth",block:"start"});
+}
+window.setGalleryFilter = setGalleryFilter;
 
-    uploadForm.addEventListener("submit", async event => {
-      event.preventDefault();
-      const user = auth.currentUser;
-      const file = $("uploadFile").files && $("uploadFile").files[0];
-      if (!user || user.email !== ADMIN_EMAIL) { uploadMessage.textContent = "শুধু Admin আপলোড করতে পারবে।"; return; }
-      if (!file) { uploadMessage.textContent = "আগে একটি ছবি বা ভিডিও বেছে নাও।"; return; }
-      if (!(file.type.startsWith("image/") || file.type.startsWith("video/"))) { uploadMessage.textContent = "শুধু ছবি বা ভিডিও ফাইল বেছে নাও।"; return; }
-      if (file.size > 50 * 1024 * 1024) { uploadMessage.textContent = "ফাইলটি ৫০ MB-এর বেশি। ছোট ফাইল বেছে নাও।"; return; }
-      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-      const objectPath = user.uid + "/" + Date.now() + "-" + safeName;
-      uploadMessage.textContent = "আপলোড হচ্ছে…";
-      try {
-        const { data, error } = await supabaseClient.storage.from(STORAGE_BUCKET).upload(objectPath, file, { cacheControl: "3600", upsert: false, contentType: file.type });
+$("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  setStatus("authStatus","লগইন হচ্ছে…");
+  try {
+    await auth.signInWithEmailAndPassword($("email").value.trim(), $("password").value);
+    setStatus("authStatus","লগইন সফল হয়েছে।");
+  } catch (error) {
+    setStatus("authStatus","লগইন হয়নি: " + error.message);
+  }
+});
+
+$("resetBtn").addEventListener("click", async () => {
+  const email = $("email").value.trim();
+  if (!email) { setStatus("authStatus","আগে Email address লিখুন।"); return; }
+  try {
+    await auth.sendPasswordResetEmail(email);
+    setStatus("authStatus","পাসওয়ার্ড রিসেট লিংক ইমেইলে পাঠানো হয়েছে।");
+  } catch (error) {
+    setStatus("authStatus","লিংক পাঠানো যায়নি: " + error.message);
+  }
+});
+
+$("logoutBtn").addEventListener("click", async () => {
+  try { await auth.signOut(); setStatus("authStatus","Logout হয়েছে।"); }
+  catch(error) { setStatus("authStatus","Logout হয়নি: " + error.message); }
+});
+
+$("uploadForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  if (!isAdminUser()) return setStatus("uploadStatus","শুধু Admin আপলোড করতে পারবেন।");
+  const file = $("mediaFile").files[0];
+  if (!file) return setStatus("uploadStatus","একটি ছবি বা ভিডিও বেছে নিন।");
+  if (file.size > 50 * 1024 * 1024) return setStatus("uploadStatus","ফাইল ৫০ MB-এর বেশি হতে পারবে না।");
+  if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
+    return setStatus("uploadStatus","শুধু image বা video ফাইল আপলোড করা যাবে।");
+  }
+
+  const button = $("uploadForm").querySelector("button[type=submit]");
+  button.disabled = true;
+  setStatus("uploadStatus","আপলোড হচ্ছে…");
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+  const storagePath = Date.now() + "_" + safeName;
+  try {
+    const { error: uploadError } = await supabaseClient.storage.from(BUCKET).upload(storagePath,file,{upsert:false,contentType:file.type});
+    if (uploadError) throw uploadError;
+    await db.collection("gallery").add({
+      title: $("mediaTitle").value.trim(),
+      type: file.type.startsWith("video/") ? "video" : "photo",
+      storagePath,
+      description: $("mediaDescription").value.trim(),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    $("uploadForm").reset();
+    setStatus("uploadStatus","আপলোড সফল হয়েছে।");
+    loadGallery();
+  } catch (error) {
+    setStatus("uploadStatus","আপলোড হয়নি: " + error.message);
+  } finally {
+    button.disabled = false;
+  }
+});
+
+$("urlForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  if (!isAdminUser()) return setStatus("urlStatus","শুধু Admin URL যোগ করতে পারবেন।");
+  const url = $("mediaUrl").value.trim();
+  const title = $("urlTitle").value.trim();
+  const isVideo = /\.(mp4|webm|ogg)(\?.*)?$/i.test(url);
+  try {
+    await db.collection("gallery").add({
+      title,
+      type: isVideo ? "video" : "photo",
+      url,
+      description: $("urlDescription").value.trim(),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    $("urlForm").reset();
+    setStatus("urlStatus","URL যোগ হয়েছে।");
+    loadGallery();
+  } catch (error) {
+    setStatus("urlStatus","URL যোগ হয়নি: " + error.message);
+  }
+});
+
+async function getMediaUrl(item) {
+  if (item.url) return item.url;
+  if (!item.storagePath) return "";
+  const { data, error } = await supabaseClient.storage.from(BUCKET).createSignedUrl(item.storagePath, 3600);
+  if (error) throw error;
+  return data.signedUrl;
+}
+
+function makeMediaCard(doc, item, mediaUrl) {
+  const card = document.createElement("article");
+  card.className = "media-card";
+  let media;
+  if (item.type === "video") {
+    media = document.createElement("video");
+    media.controls = true;
+    media.preload = "metadata";
+  } else {
+    media = document.createElement("img");
+    media.loading = "lazy";
+    media.alt = item.title || "Gallery image";
+  }
+  media.src = mediaUrl;
+  card.append(media);
+
+  const info = document.createElement("div");
+  info.className = "media-info";
+  const title = document.createElement("strong");
+  title.textContent = item.title || "Untitled";
+  info.append(title);
+  if (item.description) {
+    const description = document.createElement("small");
+    description.textContent = item.description;
+    info.append(description);
+  }
+  const actions = document.createElement("div");
+  actions.className = "actions";
+  const open = document.createElement("button");
+  open.type = "button";
+  open.className = "secondary";
+  open.textContent = "মিডিয়া খুলুন";
+  open.addEventListener("click", () => window.open(mediaUrl,"_blank","noopener"));
+  actions.append(open);
+
+  const remove = document.createElement("button");
+  remove.type = "button";
+  remove.className = "danger";
+  remove.textContent = "Delete";
+  remove.addEventListener("click", async () => {
+    if (!isAdminUser() || !confirm("এই মিডিয়াটি মুছে ফেলবেন?")) return;
+    remove.disabled = true;
+    try {
+      if (item.storagePath) {
+        const { error } = await supabaseClient.storage.from(BUCKET).remove([item.storagePath]);
         if (error) throw error;
-        await db.collection("gallery").add({
-          title: file.name,
-          type: file.type.startsWith("video/") ? "video" : "photo",
-          storagePath: data.path,
-          description: "",
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        uploadForm.reset(); uploadMessage.textContent = "Upload সম্পন্ন হয়েছে!";
-      } catch (error) { uploadMessage.textContent = "Upload হয়নি: " + (error.message || String(error)); }
-    });
-
-    mediaForm.addEventListener("submit", async event => {
-      event.preventDefault();
-      const user = auth.currentUser;
-      if (!user || user.email !== ADMIN_EMAIL) { adminMessage.textContent = "এই কাজের অনুমতি নেই।"; return; }
-      const url = $("mediaUrl").value.trim();
-      try {
-        new URL(url);
-        adminMessage.textContent = "যোগ করা হচ্ছে…";
-        await db.collection("gallery").add({
-          title: $("mediaTitle").value.trim(),
-          type: $("mediaType").value,
-          url,
-          description: $("mediaDescription").value.trim(),
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        mediaForm.reset(); adminMessage.textContent = "গ্যালারিতে যোগ হয়েছে।";
-      } catch (error) { adminMessage.textContent = "যোগ করা যায়নি: " + error.message; }
-    });
-
-    auth.onAuthStateChanged(user => {
-      if (galleryUnsubscribe) { galleryUnsubscribe(); galleryUnsubscribe = null; }
-      gallerySection.style.display = "none"; galleryList.replaceChildren();
-      if (user) {
-        message.textContent = "লগইন হয়েছে: " + user.email;
-        form.style.display = "none"; reset.style.display = "none"; logout.style.display = "inline-block";
-        if (user.email === ADMIN_EMAIL) {
-          adminPanel.style.display = "block";
-          adminMessage.textContent = "Admin হিসেবে প্রবেশ করা হয়েছে।";
-          loadGallery();
-        } else {
-          adminPanel.style.display = "none";
-          message.textContent += "। Admin Dashboard শুধু নির্দিষ্ট Admin অ্যাকাউন্টের জন্য।";
-        }
-      } else {
-        message.textContent = "লগইন করতে ইমেল ও পাসওয়ার্ড দাও।";
-        form.style.display = "grid"; reset.style.display = "inline-block"; logout.style.display = "none"; adminPanel.style.display = "none";
       }
+      await db.collection("gallery").doc(doc.id).delete();
+      setStatus("galleryStatus","মিডিয়া মুছে ফেলা হয়েছে।");
+    } catch (error) {
+      setStatus("galleryStatus","মুছতে সমস্যা হয়েছে: " + error.message);
+      remove.disabled = false;
+    }
+  });
+  actions.append(remove);
+  info.append(actions);
+  card.append(info);
+  return card;
+}
+
+function loadGallery() {
+  if (galleryUnsubscribe) galleryUnsubscribe();
+  galleryUnsubscribe = null;
+  if (!isAdminUser()) {
+    $("galleryList").replaceChildren();
+    setStatus("galleryStatus","গ্যালারি দেখতে Admin লগইন করুন।");
+    return;
+  }
+  $("galleryList").replaceChildren();
+  setStatus("galleryStatus","গ্যালারি লোড হচ্ছে…");
+  galleryUnsubscribe = db.collection("gallery").orderBy("createdAt","desc").onSnapshot(async snapshot => {
+    $("galleryList").replaceChildren();
+    const docs = snapshot.docs.filter(doc => {
+      const type = doc.data().type === "video" ? "video" : "photo";
+      return activeGalleryFilter === "all" || activeGalleryFilter === type;
     });
-  } catch (error) { message.textContent = "Firebase / Supabase চালু করা যায়নি: " + error.message; }
-})();
+    if (!docs.length) {
+      setStatus("galleryStatus",snapshot.empty ? "এখনো কোনো মিডিয়া যোগ করা হয়নি।" : "এই বিভাগে কোনো মিডিয়া নেই।");
+      return;
+    }
+    setStatus("galleryStatus","");
+    for (const doc of docs) {
+      try {
+        const item = doc.data();
+        const mediaUrl = await getMediaUrl(item);
+        $("galleryList").append(makeMediaCard(doc,item,mediaUrl));
+      } catch (error) {
+        console.error("Media load error:",error);
+      }
+    }
+  }, error => setStatus("galleryStatus","গ্যালারি পড়া যায়নি: " + error.message));
+}
+
+auth.onAuthStateChanged(user => {
+  const admin = isAdminUser(user);
+  $("adminPanel").classList.toggle("hidden",!admin);
+  $("logoutBtn").classList.toggle("hidden",!user);
+  $("email").disabled = !!user;
+  $("password").disabled = !!user;
+  if (user) {
+    setStatus("authStatus",admin ? "Admin হিসেবে লগইন করা হয়েছে।" : "লগইন হয়েছে, তবে এই অ্যাকাউন্ট Admin নয়।");
+  } else {
+    setStatus("authStatus","লগইন করুন।");
+  }
+  if (galleryUnsubscribe) { galleryUnsubscribe(); galleryUnsubscribe = null; }
+  loadGallery();
+});
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load",() => navigator.serviceWorker.register("sw.js").catch(error => console.log("Service worker:",error)));
+}
 </script>
-<script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script>
 </body>
 </html>
