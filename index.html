@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -16,12 +16,13 @@ main{width:min(960px,100%);margin:auto;padding:18px 14px 42px}h2{color:var(--gol
 button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(135deg,#f0d18a,#b9852e);color:#171109;font-weight:bold;cursor:pointer}button.secondary{background:#24211b;color:var(--gold2);border:1px solid var(--line)}button.danger{background:#4a1717;color:#fff}button:disabled{opacity:.55;cursor:not-allowed}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.filters button{padding:9px 13px}.filters button.active{outline:2px solid var(--gold2)}
 .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}.media-card,.request-card,.chat-card{background:#171717;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0}.media-card img,.media-card video{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:#050505}.media-info,.chat-inner{padding:10px}.media-info strong{display:block;color:var(--gold2);overflow-wrap:anywhere}.media-info small{display:block;color:var(--muted);margin-top:5px}
-.status{font-size:13px;color:var(--gold2);min-height:20px;white-space:pre-wrap}.muted{color:var(--muted);font-size:13px}.hidden{display:none!important}footer{text-align:center;color:#777;font-size:12px;padding:22px 10px;border-top:1px solid var(--line)}.price{font-size:25px;color:var(--gold2);font-weight:bold}.request-card{padding:12px}.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stat{padding:13px;background:#171717;border:1px solid var(--line);border-radius:10px}.stat b{display:block;color:var(--gold2);font-size:23px;margin-top:5px}.msg{padding:9px;margin:7px 0;border-radius:10px;background:#24211b;overflow-wrap:anywhere}.msg.mine{background:#49371a}.conversation{border:1px solid var(--line);padding:10px;border-radius:10px;margin:8px 0}.small{font-size:12px;color:var(--muted)}.user-row{padding:12px;border:1px solid var(--line);border-radius:10px;margin:8px 0;background:#171717;overflow-wrap:anywhere}.ref-link{padding:12px;background:#080808;border:1px solid var(--line);border-radius:9px;overflow-wrap:anywhere;color:var(--gold2)}
+.status{font-size:13px;color:var(--gold2);min-height:20px;white-space:pre-wrap}.muted{color:var(--muted);font-size:13px}.hidden{display:none!important}footer{text-align:center;color:#777;font-size:12px;padding:22px 10px;border-top:1px solid var(--line)}.price{font-size:25px;color:var(--gold2);font-weight:bold}.request-card{padding:12px}.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stat{padding:13px;background:#171717;border:1px solid var(--line);border-radius:10px}.stat b{display:block;color:var(--gold2);font-size:23px;margin-top:5px}.msg{padding:9px;margin:7px 0;border-radius:10px;background:#24211b;overflow-wrap:anywhere}.msg.mine{background:#49371a}.conversation{border:1px solid var(--line);padding:10px;border-radius:10px;margin:8px 0}.small{font-size:12px;color:var(--muted)}.user-row{padding:12px;border:1px solid var(--line);border-radius:10px;margin:8px 0;background:#171717;overflow-wrap:anywhere}.ref-link{padding:12px;background:#080808;border:1px solid var(--line);border-radius:9px;overflow-wrap:anywhere;color:var(--gold2)}.notification-item{padding:12px;border:1px solid var(--line);border-radius:10px;margin:9px 0;background:#171717}.notification-item strong{color:var(--gold2)}header{position:relative}
 @media(min-width:650px){.tiles{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
-<header><div class="brand">INDIAN BHABI</div><div class="tag">EXCLUSIVE UNCUT CONTENT</div></header>
+<header><div class="brand">INDIAN BHABI</div><div class="tag">EXCLUSIVE UNCUT CONTENT</div><button id="notificationBell" class="secondary hidden" aria-label="Notifications" title="Notifications" style="position:absolute;right:14px;top:14px;padding:9px 12px;font-size:22px">🔔<span id="notificationCount" style="font-size:11px;margin-left:4px"></span></button></header>
+<section id="notificationPanel" class="panel hidden" style="max-width:960px;margin:12px auto;padding:14px"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:4px 0">Notifications</h2><button type="button" class="secondary" id="closeNotifications">Close</button></div><div id="notificationList" class="muted">No notifications yet.</div></section>
 <main>
 <section class="hero hidden" id="userHero"><h2>Welcome to Indian Bhabi</h2><p>A Black & Gold Premium Gallery</p></section>
 <section class="tiles hidden" id="userTiles">
@@ -53,20 +54,21 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 <label class="muted" for="profilePhotoFile">Profile Picture</label><input id="profilePhotoFile" type="file" accept="image/*">
 <button type="submit" id="saveProfileBtn">Save Profile</button>
 </form><div class="status" id="profileStatus"></div>
-<div class="actions"><button type="button" class="secondary" id="shareEarnOpen">Share & Earn</button><button type="button" class="danger" id="profileLogoutBtn">Logout</button></div>
+<div class="actions"><button type="button" class="secondary" id="shareEarnOpen">Share & Earn</button><button type="button" class="secondary" id="enablePushBtn">Enable Push Notifications</button><button type="button" class="danger" id="profileLogoutBtn">Logout</button></div><div class="status" id="pushStatus">Enable notifications to receive updates when the app is closed.</div>
 </section>
 <section class="panel hidden" id="shareEarnSection">
 <h2>Share & Earn</h2>
 <p>Share your referral link. When someone creates an account using this link and purchases their first ₹199 subscription:</p>
 <ul><li>You will receive an extra <b>3 days of Premium</b>.</li><li>The new subscriber will also receive an extra <b>3 days of Premium</b>.</li></ul>
 <p class="muted">The bonus is awarded only once for each new user’s first successful subscription. Self-referrals are not eligible.</p>
-<div id="referralLink" class="ref-link">Generating referral link…</div>
+<div class="stats" id="referralStats"><div class="stat">Successful Referrals<b id="referralCount">0</b></div><div class="stat">Bonus Days Earned<b id="referralDays">0</b></div></div><p class="muted" id="referralStatsNote">Loading your referral results…</p><div id="referralLink" class="ref-link">Generating referral link…</div>
 <div class="actions"><button type="button" id="copyReferralBtn">Copy Link</button><button type="button" class="secondary" id="shareReferralBtn">Share Link</button><button type="button" class="secondary" id="shareEarnBack">Back to My Account</button></div>
 <div class="status" id="referralStatus"></div>
 </section>
 <section class="panel hidden" id="adminPanel"><h2>Admin Dashboard</h2>
 <p class="muted">Upload photos/videos (maximum 50 MB).</p>
 <form id="uploadForm"><input id="mediaTitle" placeholder="Media title" required><input id="mediaFile" type="file" accept="image/*,video/*" required><textarea id="mediaDescription" rows="2" placeholder="Description (optional)"></textarea><button>Upload Media</button></form><div class="status" id="uploadStatus"></div>
+<hr style="border-color:#3a2e18;margin:20px 0"><h2>Post Live Notification</h2><p class="muted">Send a live announcement to all logged-in users. Add the live link if available.</p><form id="liveNoticeForm"><input id="liveNoticeTitle" placeholder="Live title" required><input id="liveNoticeUrl" type="url" placeholder="Live link (optional)"><textarea id="liveNoticeDescription" rows="2" placeholder="Live details (optional)"></textarea><button>Notify All Users</button></form><div class="status" id="liveNoticeStatus"></div>
 <hr style="border-color:#3a2e18;margin:20px 0"><h2>Add Media URL</h2>
 <form id="urlForm"><input id="urlTitle" placeholder="Media title" required><input id="mediaUrl" type="url" placeholder="https://example.com/image.jpg" required><textarea id="urlDescription" rows="2" placeholder="Description"></textarea><button>Add URL</button></form><div class="status" id="urlStatus"></div>
 <hr style="border-color:#3a2e18;margin:20px 0"><h2>Premium & Message Payment Requests</h2><div id="paymentRequests" class="muted">Visible after Admin login.</div>
@@ -96,18 +98,50 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 "use strict";
 const firebaseConfig={apiKey:"AIzaSyDbkxXO00WVwB4QCGiLmoE5wlZnM4oCSPE",authDomain:"indian-bhabi-696aa.firebaseapp.com",projectId:"indian-bhabi-696aa",storageBucket:"indian-bhabi-696aa.firebasestorage.app",messagingSenderId:"618265959158",appId:"1:618265959158:web:6339f322dfcc10157fead7"};
+const FCM_VAPID_PUBLIC_KEY="BPcsxWsYZhk87v7DazQYO2-gSKNQhP9ihZwkwpRXG64XObMnkX0DETpvLI7h5DQzODHPMy37nEVMos50bKDEt9g";
 const ADMIN_EMAIL="misiroy75@gmail.com",SUPABASE_URL="https://pcqnieukazuctminsufb.supabase.co",SUPABASE_PUBLISHABLE_KEY="sb_publishable_GOzDPU4_viTeY6EuidkzLQ_xfrE3hML",BUCKET="indian-bhabi-media",PAYMENT_UPI="paytmqr17eleoemav@paytm";
 firebase.initializeApp(firebaseConfig);const auth=firebase.auth(),db=firebase.firestore();
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{accessToken:async()=>auth.currentUser?await auth.currentUser.getIdToken():null});
-const $=id=>document.getElementById(id);let galleryUnsubscribe=null,paymentUnsubscribe=null,chatUnsubscribe=null,activeGalleryFilter="all",activeConversation=null;
+const $=id=>document.getElementById(id);let galleryUnsubscribe=null,paymentUnsubscribe=null,chatUnsubscribe=null,notificationUnsubscribe=null,notificationDocs=[],activeGalleryFilter="all",activeConversation=null;
 function isAdminUser(u=auth.currentUser){return !!u&&(u.email||"").toLowerCase()===ADMIN_EMAIL}
 function setStatus(id,msg){$(id).textContent=msg}
 async function hasActivePremium(u=auth.currentUser){if(!u)return false;if(isAdminUser(u))return true;const s=await db.collection("users").doc(u.uid).get();if(!s.exists)return false;const d=s.data(),e=d.premiumUntil;return d.premium===true&&e&&e.toMillis&&e.toMillis()>Date.now()}
 async function track(type){try{const u=auth.currentUser;await db.collection("analytics").add({type,uid:u?u.uid:null,email:u?u.email:null,createdAt:firebase.firestore.FieldValue.serverTimestamp()})}catch(e){console.warn("analytics",e.message)}}
+async function publishNotification(data){if(!isAdminUser())throw new Error("Admin access required.");await db.collection("publicNotifications").add({...data,createdAt:firebase.firestore.FieldValue.serverTimestamp(),createdBy:auth.currentUser.uid});}
+function renderNotifications(){const box=$("notificationList");box.replaceChildren();if(!notificationDocs.length){box.textContent="No notifications yet.";$('notificationCount').textContent="";return;}const seen=Number(localStorage.getItem("ib_notifications_seen_"+auth.currentUser.uid)||0);let unread=0;for(const d of notificationDocs){const n=d.data(),ms=n.createdAt&&n.createdAt.toMillis?n.createdAt.toMillis():0;if(ms>seen)unread++;const item=document.createElement("div");item.className="notification-item";const title=document.createElement("strong");title.textContent=(n.type==="live"?"🔴 LIVE: ":n.type==="video"?"▶ New Video: ":"▧ New Photo: ")+(n.title||"New update");const desc=document.createElement("p");desc.className="muted";desc.textContent=n.description||"Admin has shared a new update.";item.append(title,desc);if(n.url){const a=document.createElement("a");a.href=n.url;a.target="_blank";a.rel="noopener noreferrer";a.textContent=n.type==="live"?"Watch Live":"Open Post";a.style.color="var(--gold2)";item.append(a)}box.append(item)}$('notificationCount').textContent=unread?String(unread):"";}
+function listenNotifications(){if(notificationUnsubscribe)notificationUnsubscribe();notificationUnsubscribe=db.collection("publicNotifications").orderBy("createdAt","desc").limit(50).onSnapshot(s=>{notificationDocs=s.docs;renderNotifications()},e=>{$("notificationList").textContent="Could not load notifications: "+e.message});}
+$("notificationBell").onclick=()=>{$("notificationPanel").classList.toggle("hidden");if(auth.currentUser){localStorage.setItem("ib_notifications_seen_"+auth.currentUser.uid,String(Date.now()));renderNotifications()}};
+$("closeNotifications").onclick=()=>$("notificationPanel").classList.add("hidden");
+
+let messagingInstance=null;
+async function enablePushNotifications(){
+ const u=auth.currentUser;if(!u)return setStatus("pushStatus","Please log in first.");
+ if(!("serviceWorker" in navigator)||!("Notification" in window))return setStatus("pushStatus","Push notifications are not supported by this browser.");
+ if(!(await firebase.messaging.isSupported()))return setStatus("pushStatus","Push notifications are not supported by this browser.");
+ if(!FCM_VAPID_PUBLIC_KEY||FCM_VAPID_PUBLIC_KEY.includes("PASTE_"))return setStatus("pushStatus","Firebase Web Push Public Key is not configured yet. Add it to index.html first.");
+ const btn=$("enablePushBtn");btn.disabled=true;setStatus("pushStatus","Requesting notification permission…");
+ try{
+  const permission=await Notification.requestPermission();if(permission!=="granted")throw Error("Notification permission was not granted.");
+  const reg=await navigator.serviceWorker.register("sw.js");
+  await navigator.serviceWorker.ready;
+  messagingInstance=messagingInstance||firebase.messaging();
+  const token=await messagingInstance.getToken({vapidKey:FCM_VAPID_PUBLIC_KEY,serviceWorkerRegistration:reg});
+  if(!token)throw Error("Could not get a push token. Please try again.");
+  const digest=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(token));
+  const tokenId=Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,"0")).join("");
+  await db.collection("users").doc(u.uid).collection("fcmTokens").doc(tokenId).set({token,createdAt:firebase.firestore.FieldValue.serverTimestamp(),userAgent:navigator.userAgent.slice(0,180)},{merge:true});
+  setStatus("pushStatus","Push notifications enabled on this device.");
+  messagingInstance.onMessage(payload=>{const n=payload.notification||{};const item=document.createElement("div");item.className="notification-item";const t=document.createElement("strong");t.textContent=n.title||"Indian Bhabi";const p=document.createElement("p");p.className="muted";p.textContent=n.body||"You have a new update.";item.append(t,p);$("notificationList").prepend(item);$("notificationPanel").classList.remove("hidden");});
+ }catch(e){setStatus("pushStatus","Could not enable notifications: "+e.message)}finally{btn.disabled=false}
+}
+$("enablePushBtn").onclick=enablePushNotifications;
+
+
 function setGalleryFilter(f){activeGalleryFilter=["all","photo","video"].includes(f)?f:"all";document.querySelectorAll("[data-filter]").forEach(b=>{let a=b.dataset.filter===activeGalleryFilter;b.classList.toggle("active",a);b.classList.toggle("secondary",!a)});loadGallery();$("gallerySection").scrollIntoView({behavior:"smooth"})}window.setGalleryFilter=setGalleryFilter;
 $("loginForm").addEventListener("submit",async e=>{e.preventDefault();setStatus("authStatus","Logging in…");try{await auth.signInWithEmailAndPassword($("email").value.trim(),$("password").value);await track("login");setStatus("authStatus","Login successful.")}catch(x){setStatus("authStatus","Login failed: "+x.message)}});
 function referralUidFromUrl(){try{const id=new URLSearchParams(location.search).get("ref");return id&&/^[A-Za-z0-9_-]{10,128}$/.test(id)?id:null}catch(e){return null}}
@@ -120,10 +154,11 @@ $("logoutBtn").onclick=()=>auth.signOut();
 async function getMediaUrl(item){if(item.url)return item.url;if(!item.storagePath)throw Error("Media URL missing");let u=auth.currentUser;if(!u)throw Error("Login required");let token=await u.getIdToken(true),r=await fetch(SUPABASE_URL+"/functions/v1/quick-action",{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_PUBLISHABLE_KEY,"Authorization":"Bearer "+token},body:JSON.stringify({storagePath:item.storagePath})}),j=await r.json().catch(()=>({}));if(!r.ok||!j.success||!j.signedUrl)throw Error(j.error||"Premium access could not be verified");return j.signedUrl}
 function mediaCard(doc,item,url){let c=document.createElement("article");c.className="media-card";let m=document.createElement(item.type==="video"?"video":"img");if(item.type==="video"){m.controls=true;m.preload="metadata"}else{m.loading="lazy";m.alt=item.title||"Gallery image"}m.src=url;c.append(m);let info=document.createElement("div");info.className="media-info";let t=document.createElement("strong");t.textContent=item.title||"Untitled";info.append(t);if(item.description){let d=document.createElement("small");d.textContent=item.description;info.append(d)}if(isAdminUser()){let b=document.createElement("button");b.className="danger";b.textContent="Delete";b.onclick=async()=>{if(!confirm("Delete this item?"))return;try{if(item.storagePath)await supabaseClient.storage.from(BUCKET).remove([item.storagePath]);await db.collection("gallery").doc(doc.id).delete()}catch(e){alert(e.message)}};info.append(b)}c.append(info);return c}
 async function loadGallery(){if(galleryUnsubscribe)galleryUnsubscribe();galleryUnsubscribe=null;$("galleryList").replaceChildren();let u=auth.currentUser;if(!u){setStatus("galleryStatus","Log in and purchase Premium to view the gallery.");return}let ok=false;try{ok=await hasActivePremium(u)}catch(e){return setStatus("galleryStatus",e.message)}if(!ok)return setStatus("galleryStatus","The gallery will unlock when Premium is activated. Get 30 days of Premium for ₹199.");setStatus("galleryStatus","Loading gallery…");galleryUnsubscribe=db.collection("gallery").orderBy("createdAt","desc").onSnapshot(async s=>{$("galleryList").replaceChildren();let docs=s.docs.filter(d=>activeGalleryFilter==="all"||(d.data().type||"photo")===activeGalleryFilter);if(!docs.length)return setStatus("galleryStatus","No media in this category.");setStatus("galleryStatus","");for(let d of docs){try{$("galleryList").append(mediaCard(d,d.data(),await getMediaUrl(d.data())))}catch(e){setStatus("galleryStatus","Could not load media: "+e.message)}}},e=>setStatus("galleryStatus",e.message))}
-$("uploadForm").onsubmit=async e=>{e.preventDefault();if(!isAdminUser())return;let f=$("mediaFile").files[0];if(!f||f.size>50*1024*1024)return setStatus("uploadStatus","Choose a photo or video up to 50 MB.");setStatus("uploadStatus","Uploading…");try{let path=Date.now()+"_"+f.name.replace(/[^a-zA-Z0-9._-]/g,"_"),{error}=await supabaseClient.storage.from(BUCKET).upload(path,f,{contentType:f.type});if(error)throw error;await db.collection("gallery").add({title:$("mediaTitle").value.trim(),type:f.type.startsWith("video/")?"video":"photo",storagePath:path,description:$("mediaDescription").value.trim(),createdAt:firebase.firestore.FieldValue.serverTimestamp()});$("uploadForm").reset();setStatus("uploadStatus","Upload successful.")}catch(x){setStatus("uploadStatus",x.message)}};
-$("urlForm").onsubmit=async e=>{e.preventDefault();if(!isAdminUser())return;let u=$("mediaUrl").value.trim();try{await db.collection("gallery").add({title:$("urlTitle").value.trim(),type:/\.(mp4|webm|ogg)(\?.*)?$/i.test(u)?"video":"photo",url:u,description:$("urlDescription").value.trim(),createdAt:firebase.firestore.FieldValue.serverTimestamp()});$("urlForm").reset();setStatus("urlStatus","URL added.")}catch(x){setStatus("urlStatus",x.message)}};
+$("uploadForm").onsubmit=async e=>{e.preventDefault();if(!isAdminUser())return;let f=$("mediaFile").files[0];if(!f||f.size>50*1024*1024)return setStatus("uploadStatus","Choose a photo or video up to 50 MB.");setStatus("uploadStatus","Uploading…");try{let path=Date.now()+"_"+f.name.replace(/[^a-zA-Z0-9._-]/g,"_"),{error}=await supabaseClient.storage.from(BUCKET).upload(path,f,{contentType:f.type});if(error)throw error;const mediaType=f.type.startsWith("video/")?"video":"photo",mediaTitle=$("mediaTitle").value.trim(),mediaDescription=$("mediaDescription").value.trim();await db.collection("gallery").add({title:mediaTitle,type:mediaType,storagePath:path,description:mediaDescription,createdAt:firebase.firestore.FieldValue.serverTimestamp()});await publishNotification({type:mediaType,title:mediaTitle,description:mediaDescription});$("uploadForm").reset();setStatus("uploadStatus","Upload successful.")}catch(x){setStatus("uploadStatus",x.message)}};
+$("urlForm").onsubmit=async e=>{e.preventDefault();if(!isAdminUser())return;let u=$("mediaUrl").value.trim();try{const mediaType=/\.(mp4|webm|ogg)(\?.*)?$/i.test(u)?"video":"photo",mediaTitle=$("urlTitle").value.trim(),mediaDescription=$("urlDescription").value.trim();await db.collection("gallery").add({title:mediaTitle,type:mediaType,url:u,description:mediaDescription,createdAt:firebase.firestore.FieldValue.serverTimestamp()});await publishNotification({type:mediaType,title:mediaTitle,description:mediaDescription,url:u});$("urlForm").reset();setStatus("urlStatus","URL added.")}catch(x){setStatus("urlStatus",x.message)}};
 function openUPI(amount,description){if(!auth.currentUser){setStatus("paymentStatus","Please log in first.");$("account").scrollIntoView({behavior:"smooth"});return}let p=new URLSearchParams({pa:PAYMENT_UPI,pn:"Indian Bhabi",am:String(amount),cu:"INR",tn:description});location.href="upi://pay?"+p.toString()}
 $("payUpiBtn").onclick=()=>openUPI(199,"Indian Bhabi Premium 30 Days");
+$("liveNoticeForm").onsubmit=async e=>{e.preventDefault();try{await publishNotification({type:"live",title:$("liveNoticeTitle").value.trim(),description:$("liveNoticeDescription").value.trim(),url:$("liveNoticeUrl").value.trim()});$("liveNoticeForm").reset();setStatus("liveNoticeStatus","Live notification sent to users.")}catch(x){setStatus("liveNoticeStatus","Could not send notification: "+x.message)}};
 $("paymentForm").onsubmit=async e=>{e.preventDefault();let u=auth.currentUser;if(!u)return setStatus("paymentStatus","Please log in first.");if(!u.emailVerified)return setStatus("paymentStatus","Please verify your email first.");let utr=$("utrNumber").value.trim();if(!/^[a-zA-Z0-9]{8,30}$/.test(utr))return setStatus("paymentStatus","Please enter a valid UTR.");try{await db.collection("paymentRequests").add({uid:u.uid,email:u.email,utr,amount:199,planDays:30,upiId:PAYMENT_UPI,status:"pending",createdAt:firebase.firestore.FieldValue.serverTimestamp()});$("paymentForm").reset();setStatus("paymentStatus","Request submitted. The Admin will verify it.")}catch(x){setStatus("paymentStatus",x.message)}};
 $("newConversationPay").onclick=()=>{if(!auth.currentUser)return setStatus("messagePaymentStatus","Please log in first.");openUPI(45,"Indian Bhabi New Conversation");$("messagePaymentForm").classList.remove("hidden");setStatus("messagePaymentStatus","Pay ₹45 in your UPI app, return here, and submit the UTR.")};
 $("messagePaymentForm").onsubmit=async e=>{e.preventDefault();let u=auth.currentUser;if(!u)return;let utr=$("messageUtr").value.trim();if(!/^[a-zA-Z0-9]{8,30}$/.test(utr))return setStatus("messagePaymentStatus","Please enter a valid UTR.");try{await db.collection("messagePaymentRequests").add({uid:u.uid,email:u.email,utr,amount:45,status:"pending",createdAt:firebase.firestore.FieldValue.serverTimestamp()});$("messagePaymentForm").reset();setStatus("messagePaymentStatus","Your ₹45 request has been submitted. The Admin will verify it and open the conversation.")}catch(x){setStatus("messagePaymentStatus",x.message)}};
@@ -241,7 +276,7 @@ $("profileForm").onsubmit=async e=>{
  }catch(x){setStatus("profileStatus","Save failed: "+x.message)}
  finally{btn.disabled=false}
 };
-function openShareEarn(){const u=auth.currentUser;if(!u)return;$("profileSection").classList.add("hidden");$("shareEarnSection").classList.remove("hidden");const link=location.origin+location.pathname+"?ref="+encodeURIComponent(u.uid);$("referralLink").textContent=link;setStatus("referralStatus","")}
+async function openShareEarn(){const u=auth.currentUser;if(!u)return;$("profileSection").classList.add("hidden");$("shareEarnSection").classList.remove("hidden");const link=location.origin+location.pathname+"?ref="+encodeURIComponent(u.uid);$("referralLink").textContent=link;setStatus("referralStatus","");$("referralCount").textContent="…";$("referralDays").textContent="…";$("referralStatsNote").textContent="Loading your successful referrals…";try{const snap=await db.collection("referralRewards").where("referrerUid","==",u.uid).get();let days=0;snap.forEach(d=>days+=Number(d.data().bonusDays||3));$("referralCount").textContent=String(snap.size);$("referralDays").textContent=String(days);$("referralStatsNote").textContent=snap.size?"Bonus is counted after the referred user's first subscription is approved.":"No successful referrals yet. Share your link to start earning 3-day bonuses."}catch(e){$("referralStatsNote").textContent="Referral statistics could not be loaded: "+e.message}}
 $("shareEarnOpen").onclick=openShareEarn;
 $("shareEarnBack").onclick=()=>{$("shareEarnSection").classList.add("hidden");$("profileSection").classList.remove("hidden")};
 $("copyReferralBtn").onclick=async()=>{const link=$("referralLink").textContent;try{await navigator.clipboard.writeText(link);setStatus("referralStatus","Referral link copied.")}catch(e){setStatus("referralStatus","Could not copy. Long-press the link and select Copy.")}};
@@ -249,6 +284,7 @@ $("shareReferralBtn").onclick=async()=>{const url=$("referralLink").textContent;
 
 function showRoleDashboard(u){
  const admin=isAdminUser(u),loggedIn=!!u;
+ $("notificationBell").classList.toggle("hidden",!loggedIn);
  $("account").classList.toggle("hidden",loggedIn);
  $("profileSection").classList.toggle("hidden",!loggedIn);
  $("adminPanel").classList.toggle("hidden",!admin);
@@ -266,9 +302,10 @@ auth.onAuthStateChanged(async u=>{
  setStatus("authStatus",u?(admin?"Logged in as Admin.":"Logged in as User."):"Log in or create an account.");
  if(galleryUnsubscribe){galleryUnsubscribe();galleryUnsubscribe=null}
  if(chatUnsubscribe){chatUnsubscribe();chatUnsubscribe=null}
+ if(notificationUnsubscribe){notificationUnsubscribe();notificationUnsubscribe=null}
  activeConversation=null;
- if(u){await loadProfile(u);if(!admin){loadGallery();listenMyConversations()}else{loadAdminRequests();loadAdminInbox();loadAdminUsers();loadAnalytics()}}
- else{$("galleryList").replaceChildren();setStatus("galleryStatus","Log in to view the gallery.");$("myConversations").textContent="Log in to view your conversations."}
+ if(u){listenNotifications();await loadProfile(u);if(!admin){loadGallery();listenMyConversations()}else{loadAdminRequests();loadAdminInbox();loadAdminUsers();loadAnalytics()}}
+ else{$("notificationBell").classList.add("hidden");$("notificationPanel").classList.add("hidden");$("galleryList").replaceChildren();setStatus("galleryStatus","Log in to view the gallery.");$("myConversations").textContent="Log in to view your conversations."}
 });
 let visitKey="ib_visit_"+new Date().toISOString().slice(0,10);if(!sessionStorage.getItem(visitKey)){sessionStorage.setItem(visitKey,"1");track("visit")}
 if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
