@@ -177,8 +177,11 @@ function adminApproveRequest(collectionName,doc,item,kind){
     }
    }catch(x){alert("Approve হয়নি: "+x.message);a.disabled=false}
   };
-  let r=document.createElement("button");r.className="danger";r.textContent="Reject";r.onclick=async()=>{if(confirm("Reject করবেন?"))await db.collection(collectionName).doc(doc.id).update({status:"rejected",reviewedAt:firebase.firestore.FieldValue.serverTimestamp()})};wrap.append(a,r)
+  let r=document.createElement("button");r.className="danger";r.textContent="Reject";r.onclick=async()=>{if(confirm("Reject করবেন?"))try{await db.collection(collectionName).doc(doc.id).update({status:"rejected",reviewedAt:firebase.firestore.FieldValue.serverTimestamp()})}catch(e){alert("Reject হয়নি: "+e.message)}};wrap.append(a,r)
  }
+ let del=document.createElement("button");del.className="danger";del.textContent="Delete";del.style.marginLeft="8px";
+ del.onclick=async()=>{if(!confirm("এই Payment Request History স্থায়ীভাবে Delete করবেন? Approved Subscription বা Conversation এতে বাতিল হবে না।"))return;del.disabled=true;try{await db.collection(collectionName).doc(doc.id).delete()}catch(e){del.disabled=false;alert("Delete হয়নি: "+e.message)}};
+ wrap.append(del);
  return wrap
 }
 function loadAdminRequests(){["paymentRequests","messagePaymentRequests"].forEach((col,i)=>db.collection(col).orderBy("createdAt","desc").onSnapshot(s=>{let box=$("paymentRequests");if(i===0)box.replaceChildren();if(s.empty&&i===0){box.textContent="কোনো Request নেই।";return}s.forEach(d=>box.append(adminApproveRequest(col,d,d.data(),i===0?"Premium":"Message")))} ,e=>{$("paymentRequests").textContent=e.message}))}
