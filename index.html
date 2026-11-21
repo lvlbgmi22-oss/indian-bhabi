@@ -75,7 +75,12 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 <hr style="border-color:#3a2e18;margin:20px 0"><h2>Users</h2><p class="muted">All registered user details will appear here.</p><button type="button" class="secondary" id="refreshUsersBtn">Refresh Users</button><div id="adminUsers" class="muted">Loading…</div>
 <hr style="border-color:#3a2e18;margin:20px 0"><h2>Admin Message Inbox</h2><div id="adminInbox" class="muted">Loading…</div>
 <div id="adminChatArea" class="panel hidden" style="margin-top:14px"><h2 id="adminChatTitle">Reply to User</h2><div id="adminChatMessages"></div><form id="adminSendMessageForm"><textarea id="adminMessageText" rows="2" maxlength="3000" placeholder="Write your reply…" required></textarea><button id="adminSendMessageBtn">Send Reply</button></form><div class="status" id="adminChatStatus"></div></div>
+
+<hr style="border-color:#3a2e18;margin:20px 0"><h2>ZEGO Live Events</h2>
+<form id="ibCreateLiveForm"><input id="ibLiveTitle" placeholder="Live event title" required><textarea id="ibLiveDesc" rows="2" placeholder="Live description"></textarea><button type="submit">Create Live Event</button></form><div class="status" id="ibAdminLiveStatus"></div><div id="ibAdminLiveList" class="muted">Live events will appear here.</div>
 </section>
+
+<section class="panel hidden" id="ibLiveSection"><h2>Live Shows</h2><p class="muted">Book a live show for ₹99. Access is available after Admin verifies your UTR.</p><div id="ibLiveList" class="muted">Loading live events…</div><div class="status" id="ibLiveStatus"></div><div id="ibLivePlayerWrap" class="hidden"><h3 id="ibLivePlayerTitle">Live</h3><video id="ibLiveVideo" autoplay playsinline controls style="width:100%;max-height:55vh;background:#000;border-radius:12px"></video><button type="button" class="secondary" id="ibLeaveLive">Leave Live</button></div></section>
 
 <section class="panel hidden" id="gallerySection"><h2>Gallery</h2><p class="muted">Only Admin and users with an active Premium subscription can view the gallery.</p>
 <div class="filters"><button class="active" data-filter="all" onclick="setGalleryFilter('all')">All</button><button class="secondary" data-filter="photo" onclick="setGalleryFilter('photo')">Photos</button><button class="secondary" data-filter="video" onclick="setGalleryFilter('video')">Videos</button></div>
@@ -267,7 +272,7 @@ function showRoleDashboard(u){
  $("adminAnalyticsTop").classList.toggle("hidden",!admin);
  $("userHero").classList.toggle("hidden",!loggedIn||admin);
  $("userTiles").classList.toggle("hidden",!loggedIn||admin);
- ["gallerySection","paymentSection","messagesSection","paymentInfoSection"].forEach(id=>$(id).classList.toggle("hidden",!loggedIn||admin));
+ ["gallerySection","paymentSection","messagesSection","paymentInfoSection","ibLiveSection"].forEach(id=>$(id).classList.toggle("hidden",!loggedIn||admin));
  if(!loggedIn){$("profileStatus").textContent="";$("chatArea").classList.add("hidden");$("shareEarnSection").classList.add("hidden");}
 }
 auth.onAuthStateChanged(async u=>{
@@ -285,5 +290,64 @@ auth.onAuthStateChanged(async u=>{
 });
 let visitKey="ib_visit_"+new Date().toISOString().slice(0,10);if(!sessionStorage.getItem(visitKey)){sessionStorage.setItem(visitKey,"1");track("visit")}
 if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script>
+<script>
+
+// INDIAN BHABI ZEGO LIVE MODULE
+(()=>{
+ const byId=id=>document.getElementById(id);
+ let liveDocs=[],adminLiveUnsub=null,userLiveUnsub=null,zego=null,currentRoom=null,currentStream=null;
+ const status=(id,msg)=>{const el=byId(id);if(el)el.textContent=msg};
+ const admin=()=>!!auth.currentUser&&(auth.currentUser.email||'').toLowerCase()===ADMIN_EMAIL;
+ const safe=(v)=>String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ async function getZegoToken(roomID,action){
+   const user=auth.currentUser;if(!user)throw Error('Please log in first.');
+   const idToken=await user.getIdToken(true);
+   const response=await fetch(SUPABASE_URL+'/functions/v1/zego-token',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_PUBLISHABLE_KEY,'Authorization':'Bearer '+idToken},body:JSON.stringify({roomID,action})});
+   const data=await response.json().catch(()=>({}));
+   if(!response.ok)throw Error(data.error||data.message||'ZEGO token request failed ('+response.status+').');
+   const token=data.token||data.zegoToken||(data.data&&(data.data.token||data.data.zegoToken));
+   if(!token)throw Error('Token response did not contain a token. Check the zego-token Edge Function response.');
+   return token;
+ }
+ function engine(){if(!window.ZegoExpressEngine)throw Error('ZEGO SDK not loaded. Check that ZegoExpressWebRTC-3.13.0.js is in the same folder as index.html.');if(!zego)zego=new ZegoExpressEngine(ZEGO_APP_ID,ZEGO_SERVER);return zego;}
+ async function leaveLive(){try{if(zego&&currentRoom){if(currentStream)await zego.stopPublishingStream(currentStream);await zego.logoutRoom(currentRoom);}}catch(e){console.warn('Leave live:',e)}currentRoom=null;currentStream=null;const v=byId('ibLiveVideo');if(v){v.srcObject=null;v.removeAttribute('src');}byId('ibLivePlayerWrap').classList.add('hidden');}
+ async function startAdminLive(eventId,event){
+   try{status('ibAdminLiveStatus','Connecting to ZEGO…');const roomID=event.roomID||eventId,token=await getZegoToken(roomID,'publish'),zg=engine();
+     const user={userID:auth.currentUser.uid,userName:'INDIAN BHABI ADMIN'};
+     await zg.loginRoom(roomID, user, {userUpdate:true,token});
+     const streamID='ib_'+roomID+'_'+auth.currentUser.uid;
+     const local=await zg.createStream({camera:{audio:true,video:true}});
+     const video=byId('ibLiveVideo');video.srcObject=local;video.muted=true;await video.play().catch(()=>{});
+     await zg.startPublishingStream(streamID);
+     currentRoom=roomID;currentStream=streamID;
+     await db.collection('liveEvents').doc(eventId).update({status:'live',startedAt:firebase.firestore.FieldValue.serverTimestamp(),roomID});
+     status('ibAdminLiveStatus','You are LIVE. Keep this page open while broadcasting.');
+   }catch(e){status('ibAdminLiveStatus','Could not start live: '+e.message);await leaveLive();}
+ }
+ async function joinLive(eventId,event){
+   try{status('ibLiveStatus','Checking your approved booking…');const roomID=event.roomID||eventId,token=await getZegoToken(roomID,'join'),zg=engine();
+     const user={userID:auth.currentUser.uid,userName:(auth.currentUser.email||'Viewer').slice(0,60)};
+     await zg.loginRoom(roomID,user,{userUpdate:true,token});
+     const video=byId('ibLiveVideo');
+     zg.on('roomStreamUpdate',async(_room,updateType,streams)=>{if(updateType==='ADD'&&streams&&streams.length){try{await zg.startPlayingStream(streams[0].streamID);const remote=zg.getMediaStream(streams[0].streamID);if(remote){video.srcObject=remote;await video.play().catch(()=>{});}}catch(e){status('ibLiveStatus','Video playback error: '+e.message)}}});
+     currentRoom=roomID;currentStream=null;byId('ibLivePlayerTitle').textContent=event.title||'Live Show';byId('ibLivePlayerWrap').classList.remove('hidden');status('ibLiveStatus','Connected. Waiting for the live video…');
+   }catch(e){status('ibLiveStatus','Could not join live: '+e.message);await leaveLive();}
+ }
+ async function book(eventId){
+   const utr=prompt('Enter the UTR / Transaction ID for your ₹99 payment:');if(utr===null)return;
+   if(!/^[a-zA-Z0-9]{8,30}$/.test(utr.trim())){status('ibLiveStatus','Please enter a valid UTR (8–30 letters/numbers).');return;}
+   try{await db.collection('liveBookings').add({uid:auth.currentUser.uid,email:auth.currentUser.email||'',liveId:eventId,utr:utr.trim(),amount:99,status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()});status('ibLiveStatus','Booking submitted. Admin will verify your ₹99 payment.');}catch(e){status('ibLiveStatus','Booking failed: '+e.message);}
+ }
+ function renderUserLives(){const box=byId('ibLiveList');box.replaceChildren();if(!liveDocs.length){box.textContent='No live events yet.';return;}liveDocs.forEach(d=>{const v=d.data(),card=document.createElement('div');card.className='conversation';const title=document.createElement('b');title.textContent=v.title||'Live Event';const desc=document.createElement('p');desc.className='muted';desc.textContent=(v.description||'')+' • '+(v.status||'scheduled');card.append(title,desc);
+   db.collection('liveBookings').where('uid','==',auth.currentUser.uid).where('liveId','==',d.id).limit(1).get().then(s=>{const b=s.empty?null:s.docs[0].data();if(b&&b.status==='approved'&&v.status==='live'){const j=document.createElement('button');j.textContent='Join Live';j.onclick=()=>joinLive(d.id,v);card.append(j);}else if(b&&b.status==='approved'){const t=document.createElement('p');t.textContent='Booking approved. Live is not started yet.';card.append(t);}else if(b&&b.status==='pending'){const t=document.createElement('p');t.textContent='Booking pending Admin verification.';card.append(t);}else{const btn=document.createElement('button');btn.textContent='Book Live — ₹99';btn.onclick=()=>book(d.id);card.append(btn);}}).catch(e=>{const t=document.createElement('p');t.textContent='Booking status: '+e.message;card.append(t);});box.append(card);
+ });}
+ function renderAdminLives(){const box=byId('ibAdminLiveList');box.replaceChildren();if(!liveDocs.length){box.textContent='No events created.';return;}liveDocs.forEach(d=>{const v=d.data(),card=document.createElement('div');card.className='conversation';const p=document.createElement('p');p.textContent=(v.title||'Live Event')+' • '+(v.status||'scheduled')+' • Room: '+(v.roomID||d.id);card.append(p);const start=document.createElement('button');start.textContent='Start Live';start.disabled=v.status==='live'||v.status==='ended';start.onclick=()=>startAdminLive(d.id,v);card.append(start);const end=document.createElement('button');end.className='danger';end.textContent='End Live';end.disabled=v.status!=='live';end.onclick=async()=>{try{await leaveLive();await db.collection('liveEvents').doc(d.id).update({status:'ended',endedAt:firebase.firestore.FieldValue.serverTimestamp()});status('ibAdminLiveStatus','Live event ended.');}catch(e){status('ibAdminLiveStatus',e.message)}};card.append(end);const bookings=document.createElement('div');bookings.className='small';bookings.textContent='Loading bookings…';card.append(bookings);db.collection('liveBookings').where('liveId','==',d.id).get().then(s=>{bookings.replaceChildren();if(s.empty){bookings.textContent='No bookings yet.';return;}s.forEach(bd=>{const b=bd.data(),row=document.createElement('p');row.textContent=(b.email||b.uid)+' | ₹'+b.amount+' | UTR '+b.utr+' | '+b.status;bookings.append(row);if(b.status==='pending'){const approve=document.createElement('button');approve.textContent='Approve Booking';approve.onclick=async()=>{if(!confirm('Have you verified this ₹99 payment and UTR?'))return;try{await bd.ref.update({status:'approved',approvedAt:firebase.firestore.FieldValue.serverTimestamp()});approve.disabled=true;approve.textContent='Approved';}catch(e){alert('Approval failed: '+e.message)}};const reject=document.createElement('button');reject.className='danger';reject.textContent='Reject';reject.onclick=async()=>{if(confirm('Reject this booking?'))try{await bd.ref.update({status:'rejected',reviewedAt:firebase.firestore.FieldValue.serverTimestamp()})}catch(e){alert(e.message)}};bookings.append(approve,reject);}});}).catch(e=>bookings.textContent='Could not load bookings: '+e.message);box.append(card);});}
+ byId('ibCreateLiveForm').addEventListener('submit',async e=>{e.preventDefault();if(!admin())return status('ibAdminLiveStatus','Admin access required.');try{const ref=db.collection('liveEvents').doc();await ref.set({title:byId('ibLiveTitle').value.trim(),description:byId('ibLiveDesc').value.trim(),roomID:ref.id,status:'scheduled',createdBy:auth.currentUser.uid,createdAt:firebase.firestore.FieldValue.serverTimestamp()});byId('ibCreateLiveForm').reset();status('ibAdminLiveStatus','Live event created. Verify bookings before approving users.');}catch(x){status('ibAdminLiveStatus','Could not create event: '+x.message)}});
+ byId('ibLeaveLive').addEventListener('click',leaveLive);
+ auth.onAuthStateChanged(u=>{if(admin()){if(userLiveUnsub){userLiveUnsub();userLiveUnsub=null;}if(!adminLiveUnsub)adminLiveUnsub=db.collection('liveEvents').orderBy('createdAt','desc').onSnapshot(s=>{liveDocs=s.docs;renderAdminLives();},e=>status('ibAdminLiveStatus',e.message));}else if(u){if(adminLiveUnsub){adminLiveUnsub();adminLiveUnsub=null;}if(!userLiveUnsub)userLiveUnsub=db.collection('liveEvents').orderBy('createdAt','desc').onSnapshot(s=>{liveDocs=s.docs;renderUserLives();},e=>status('ibLiveStatus',e.message));}else{if(adminLiveUnsub){adminLiveUnsub();adminLiveUnsub=null;}if(userLiveUnsub){userLiveUnsub();userLiveUnsub=null;}liveDocs=[];}});
+ window.addEventListener('beforeunload',()=>{if(zego&&currentRoom)zego.logoutRoom(currentRoom).catch(()=>{});});
+})();
+
 </script>
 </body></html>
