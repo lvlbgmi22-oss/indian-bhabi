@@ -398,7 +398,10 @@ async function loadGallery() {
     setStatus("galleryStatus","");
     for (const doc of docs) {
       try { const item = doc.data(); const mediaUrl = await getMediaUrl(item); $("galleryList").append(makeMediaCard(doc,item,mediaUrl)); }
-      catch (error) { console.error("Media load error:",error); }
+      catch (error) {
+        console.error("Media load error:", error);
+        setStatus("galleryStatus", "মিডিয়া লোড হয়নি: " + (error && error.message ? error.message : "Unknown error"));
+      }
     }
   }, error => setStatus("galleryStatus","গ্যালারি পড়া যায়নি: " + error.message));
 }
