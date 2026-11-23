@@ -149,7 +149,32 @@ $("closeNotifications").onclick=()=>$("notificationPanel").classList.add("hidden
 function setGalleryFilter(f){activeGalleryFilter=["all","photo","video"].includes(f)?f:"all";document.querySelectorAll("[data-filter]").forEach(b=>{let a=b.dataset.filter===activeGalleryFilter;b.classList.toggle("active",a);b.classList.toggle("secondary",!a)});loadGallery();$("gallerySection").scrollIntoView({behavior:"smooth"})}window.setGalleryFilter=setGalleryFilter;
 let signupMode=true,autoOtpRequestedFor="",otpVerifyInFlight=false;
 function setSignupMode(on){signupMode=on;$("signupOtpArea").classList.toggle("hidden",!on);document.querySelector(".signup-actions").classList.toggle("hidden",!on);$("signupSwitch").classList.toggle("hidden",!on);document.querySelector(".login-actions").classList.toggle("hidden",on);$("loginBtn").classList.toggle("hidden",on);$("resetBtn").classList.toggle("hidden",on);$("registerToggleBtn").classList.toggle("hidden",on);if(on){setStatus("authStatus","Create your account with email OTP verification.");maybeAutoSendSignupOtp();}else{setStatus("authStatus","Log in with your email and password.");}}
-$("loginForm").addEventListener("submit",async e=>{e.preventDefault();if(signupMode)setSignupMode(false);const email=$("email").value.trim(),password=$("password").value;setStatus("authStatus","Logging in…");$("loginBtn").disabled=true;try{await auth.signInWithEmailAndPassword(email,password);await track("login");setStatus("authStatus","Login successful.");window.scrollTo({top:0,behavior:"smooth"});}catch(x){setStatus("authStatus","Login failed: "+x.message)}finally{$("loginBtn").disabled=false}});
+$("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ if(signupMode)setSignupMode(false);
+ const email=$("email").value.trim(),password=$("password").value;
+ setStatus("authStatus","Logging in…");
+ $("loginBtn").disabled=true;
+ try{
+  const credential=await auth.signInWithEmailAndPassword(email,password);
+  const signedInUser=auth.currentUser||credential.user;
+  // Apply the logged-in view immediately; do not rely only on the auth listener.
+  showRoleDashboard(signedInUser);
+  $("account").classList.add("hidden");
+  $("profileSection").classList.remove("hidden");
+  $("ibFooterLogoutWrap").classList.remove("hidden");
+  $("notificationBell").classList.remove("hidden");
+  ["email","password"].forEach(id=>$(id).disabled=true);
+  ["loginBtn","registerBtn","resetBtn","loginToggleBtn","registerToggleBtn","sendSignupOtpBtn"].forEach(id=>$(id).classList.add("hidden"));
+  await track("login");
+  setStatus("authStatus","Login successful. Your account is opening…");
+  window.scrollTo({top:0,behavior:"smooth"});
+ }catch(x){
+  setStatus("authStatus","Login failed: "+(x&&x.message?x.message:String(x)));
+ }finally{
+  if(!auth.currentUser)$("loginBtn").disabled=false;
+ }
+});
 function referralUidFromUrl(){try{const id=new URLSearchParams(location.search).get("ref");return id&&/^[A-Za-z0-9_-]{10,128}$/.test(id)?id:null}catch(e){return null}}
 const incomingReferralUid=referralUidFromUrl();
 let signupOtpVerifiedEmail="";
