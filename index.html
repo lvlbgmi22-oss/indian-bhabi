@@ -146,7 +146,7 @@ $("closeNotifications").onclick=()=>$("notificationPanel").classList.add("hidden
 function setGalleryFilter(f){activeGalleryFilter=["all","photo","video"].includes(f)?f:"all";document.querySelectorAll("[data-filter]").forEach(b=>{let a=b.dataset.filter===activeGalleryFilter;b.classList.toggle("active",a);b.classList.toggle("secondary",!a)});loadGallery();$("gallerySection").scrollIntoView({behavior:"smooth"})}window.setGalleryFilter=setGalleryFilter;
 let signupMode=false,autoOtpRequestedFor="",otpVerifyInFlight=false;
 function setSignupMode(on){signupMode=on;$("signupOtpArea").classList.toggle("hidden",!on);document.querySelector(".signup-actions").classList.toggle("hidden",!on);$("signupSwitch").classList.toggle("hidden",!on);document.querySelector(".login-actions").classList.toggle("hidden",on);$("loginBtn").classList.toggle("hidden",on);$("resetBtn").classList.toggle("hidden",on);$("registerToggleBtn").classList.toggle("hidden",on);if(on){setStatus("authStatus","Create your account with email OTP verification.");maybeAutoSendSignupOtp();}else{setStatus("authStatus","Log in with your email and password.");}}
-$("loginForm").addEventListener("submit",async e=>{e.preventDefault();if(signupMode)return;setStatus("authStatus","Logging in…");try{await auth.signInWithEmailAndPassword($("email").value.trim(),$("password").value);await track("login");setStatus("authStatus","Login successful.")}catch(x){setStatus("authStatus","Login failed: "+x.message)}});
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();if(signupMode)return;const loginBtn=$("loginBtn");loginBtn.disabled=true;setStatus("authStatus","Logging in…");try{const credential=await auth.signInWithEmailAndPassword($("email").value.trim(),$("password").value);showRoleDashboard(credential.user);window.scrollTo(0,0);void track("login");setStatus("authStatus","Login successful. Opening your account…");}catch(x){setStatus("authStatus","Login failed: "+x.message)}finally{loginBtn.disabled=false}});
 function referralUidFromUrl(){try{const id=new URLSearchParams(location.search).get("ref");return id&&/^[A-Za-z0-9_-]{10,128}$/.test(id)?id:null}catch(e){return null}}
 const incomingReferralUid=referralUidFromUrl();
 let signupOtpVerifiedEmail="";
@@ -324,8 +324,9 @@ function showRoleDashboard(u){
  ["paymentSection","messagesSection","paymentInfoSection","ibLiveSection"].forEach(id=>$(id).classList.toggle("hidden",!loggedIn||admin));
  if(!loggedIn){$("profileStatus").textContent="";$("chatArea").classList.add("hidden");$("shareEarnSection").classList.add("hidden");}
 }
-auth.onAuthStateChanged(async u=>{
+auth.onAuthStateChanged(u=>{
  const admin=isAdminUser(u);showRoleDashboard(u);
+ if(u)window.scrollTo(0,0);
  $("logoutBtn").classList.toggle("hidden",!u);
  ["email","password"].forEach(id=>$(id).disabled=!!u);
  if(u){["loginBtn","registerBtn","resetBtn","loginToggleBtn","registerToggleBtn","sendSignupOtpBtn"].forEach(id=>$(id).classList.add("hidden"));}else{setSignupMode(signupMode);}
@@ -334,7 +335,7 @@ auth.onAuthStateChanged(async u=>{
  if(chatUnsubscribe){chatUnsubscribe();chatUnsubscribe=null}
  if(notificationUnsubscribe){notificationUnsubscribe();notificationUnsubscribe=null}
  activeConversation=null;
- if(u){listenNotifications();await loadProfile(u);loadGallery();if(!admin){listenMyConversations()}else{loadAdminRequests();loadAdminInbox();loadAdminUsers();loadAnalytics()}}
+ if(u){listenNotifications();void loadProfile(u);void loadGallery();if(!admin){listenMyConversations()}else{loadAdminRequests();loadAdminInbox();loadAdminUsers();void loadAnalytics()}}
  else{$("notificationBell").classList.add("hidden");$("notificationPanel").classList.add("hidden");$("galleryList").replaceChildren();setStatus("galleryStatus","Log in to view the gallery.");$("myConversations").textContent="Log in to view your conversations."}
 });
 let visitKey="ib_visit_"+new Date().toISOString().slice(0,10);if(!sessionStorage.getItem(visitKey)){sessionStorage.setItem(visitKey,"1");track("visit")}
