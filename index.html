@@ -16,27 +16,19 @@ main{width:min(960px,100%);margin:auto;padding:18px 14px 42px}h2{color:var(--gol
 button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(135deg,#f0d18a,#b9852e);color:#171109;font-weight:bold;cursor:pointer}button.secondary{background:#24211b;color:var(--gold2);border:1px solid var(--line)}button.danger{background:#4a1717;color:#fff}button:disabled{opacity:.55;cursor:not-allowed}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.filters button{padding:9px 13px}.filters button.active{outline:2px solid var(--gold2)}
 .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}.media-card,.request-card,.chat-card{background:#171717;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0}.media-card img,.media-card video{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:#050505}.media-info,.chat-inner{padding:10px}.media-info strong{display:block;color:var(--gold2);overflow-wrap:anywhere}.media-info small{display:block;color:var(--muted);margin-top:5px}
-.status{font-size:13px;color:var(--gold2);min-height:20px;white-space:pre-wrap}.muted{color:var(--muted);font-size:13px}.hidden{display:none!important}footer{text-align:center;color:#777;font-size:12px;padding:22px 10px 42px;border-top:1px solid var(--line)}.price{font-size:25px;color:var(--gold2);font-weight:bold}.request-card{padding:12px}.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stat{padding:13px;background:#171717;border:1px solid var(--line);border-radius:10px}.stat b{display:block;color:var(--gold2);font-size:23px;margin-top:5px}.msg{padding:9px;margin:7px 0;border-radius:10px;background:#24211b;overflow-wrap:anywhere}.msg.mine{background:#49371a}.conversation{border:1px solid var(--line);padding:10px;border-radius:10px;margin:8px 0}.small{font-size:12px;color:var(--muted)}.user-row{padding:12px;border:1px solid var(--line);border-radius:10px;margin:8px 0;background:#171717;overflow-wrap:anywhere}.ref-link{padding:12px;background:#080808;border:1px solid var(--line);border-radius:9px;overflow-wrap:anywhere;color:var(--gold2)}.notification-item{padding:12px;border:1px solid var(--line);border-radius:10px;margin:9px 0;background:#171717}.notification-item strong{color:var(--gold2)}header{position:relative}
+.status{font-size:13px;color:var(--gold2);min-height:20px;white-space:pre-wrap}.muted{color:var(--muted);font-size:13px}.hidden{display:none!important}footer{text-align:center;color:#777;font-size:12px;padding:22px 10px;border-top:1px solid var(--line)}.price{font-size:25px;color:var(--gold2);font-weight:bold}.request-card{padding:12px}.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stat{padding:13px;background:#171717;border:1px solid var(--line);border-radius:10px}.stat b{display:block;color:var(--gold2);font-size:23px;margin-top:5px}.msg{padding:9px;margin:7px 0;border-radius:10px;background:#24211b;overflow-wrap:anywhere}.msg.mine{background:#49371a}.conversation{border:1px solid var(--line);padding:10px;border-radius:10px;margin:8px 0}.small{font-size:12px;color:var(--muted)}.user-row{padding:12px;border:1px solid var(--line);border-radius:10px;margin:8px 0;background:#171717;overflow-wrap:anywhere}.ref-link{padding:12px;background:#080808;border:1px solid var(--line);border-radius:9px;overflow-wrap:anywhere;color:var(--gold2)}.notification-item{padding:12px;border:1px solid var(--line);border-radius:10px;margin:9px 0;background:#171717}.notification-item strong{color:var(--gold2)}header{position:relative}
 @media(min-width:650px){.tiles{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:repeat(4,1fr)}}
 
 .otp-input-wrap{position:relative}.otp-input-wrap input{padding-right:48px}.otp-input-wrap #otpVerifiedMark{display:none;position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:25px;font-weight:900;color:#22c55e}.otp-input-wrap.verified #otpVerifiedMark{display:block}.signup-actions button:first-child{flex:1}.signup-actions button:nth-child(2){min-width:130px}.account-switch{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:12px;font-size:12px;color:var(--muted)}.small-switch{font-size:12px!important;padding:6px 10px!important}
 
-
-.profile-bottom-links{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin-top:20px;padding-top:12px;border-top:1px solid rgba(128,128,128,.18)}.profile-logout-small{font-size:11px!important;padding:6px 10px!important;border-radius:7px!important}.help-support-link{font-size:12px;color:var(--gold2);text-decoration:underline;padding:3px 1px}
-#ibHelpSupport{display:flex;width:max-content;margin:12px auto 0;align-items:center;gap:7px;color:inherit;text-decoration:none;font-size:12px;padding:7px 12px;border:1px solid rgba(128,128,128,.3);border-radius:999px}
-#ibHelpSupport svg{width:17px;height:17px;fill:currentColor}
-#ibFooterLogoutWrap{text-align:center;margin:10px auto 0}
-#ibCopyrightFooter{margin-top:30px;padding:24px 10px 42px;border-top:1px solid var(--line);text-align:center;color:#777;font-size:12px}
 </style>
 
 <style>
-#ibSocialFooter{margin:32px 0 0;padding:22px 16px 12px;display:flex;justify-content:center;align-items:center;gap:22px;border-top:1px solid rgba(128,128,128,.25);text-align:center}
+#ibSocialFooter{margin:32px 0 0;padding:22px 16px calc(22px + env(safe-area-inset-bottom));display:flex;justify-content:center;align-items:center;gap:22px;border-top:1px solid rgba(128,128,128,.25);text-align:center}
 #ibSocialFooter a{display:inline-flex;align-items:center;gap:8px;color:inherit;text-decoration:none;font-weight:600;font-size:14px;padding:9px 13px;border:1px solid rgba(128,128,128,.3);border-radius:999px;transition:opacity .2s}
 #ibSocialFooter a:hover{opacity:.75}
 #ibSocialFooter svg{width:21px;height:21px;display:block;flex:none}
 @media(max-width:380px){#ibSocialFooter{gap:10px}#ibSocialFooter a{font-size:13px;padding:8px 10px}}
-#ibHelpSupport{display:flex;justify-content:center;align-items:center;gap:8px;margin:8px auto 0;padding:10px 16px calc(24px + env(safe-area-inset-bottom));color:#aaa;text-decoration:none;font-size:13px;font-weight:600;width:max-content;max-width:100%}
-#ibHelpSupport svg{width:19px;height:19px;display:block;flex:none;fill:currentColor}
 </style>
 </head>
 <body>
@@ -52,13 +44,13 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 </section>
 
 <section class="panel" id="account"><h2>Account Login / Registration</h2>
-<p class="muted">Log in with your email and password.</p>
+<p class="muted">Log in with your email and password, or create a new account.</p>
 <form id="loginForm"><input id="email" type="email" placeholder="Email address" autocomplete="username" required>
 <input id="password" type="password" placeholder="Password (minimum 6 characters)" minlength="6" required>
-<div id="signupOtpArea" class="hidden"><div class="otp-input-wrap"><input id="signupOtp" type="text" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="Enter 4-digit email OTP" autocomplete="one-time-code"><span id="otpVerifiedMark" aria-label="Email verified">✓</span></div><div class="muted" id="signupOtpStatus">Enter your email and password. OTP will be sent automatically.</div></div>
-<div class="actions signup-actions hidden"><button type="button" id="registerBtn">Create Account</button><button type="button" class="secondary" id="sendSignupOtpBtn">Resend OTP</button></div>
-<div class="account-switch hidden" id="signupSwitch">Already have an account? <button type="button" class="secondary small-switch" id="loginToggleBtn">Login</button></div>
-<div class="actions login-actions"><button type="submit" id="loginBtn">Login</button><button type="button" class="secondary" id="resetBtn" style="font-size:12px;padding:7px 10px">Forgot password?</button><button type="button" class="secondary" id="registerToggleBtn">Create Account</button></div><button type="button" class="secondary hidden" id="logoutBtn">Logout</button></form><div class="status" id="authStatus"></div></section>
+<div id="signupOtpArea"><div class="otp-input-wrap"><input id="signupOtp" type="text" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="Enter 4-digit email OTP" autocomplete="one-time-code"><span id="otpVerifiedMark" aria-label="Email verified">✓</span></div><div class="muted" id="signupOtpStatus">Enter your email and password. OTP will be sent automatically.</div></div>
+<div class="actions signup-actions"><button type="button" id="registerBtn">Create Account</button><button type="button" class="secondary" id="sendSignupOtpBtn">Resend OTP</button></div>
+<div class="account-switch" id="signupSwitch">Already have an account? <button type="button" class="secondary small-switch" id="loginToggleBtn">Login</button></div>
+<div class="actions login-actions hidden"><button type="submit" id="loginBtn">Login</button><button type="button" class="secondary" id="resetBtn" style="font-size:12px;padding:7px 10px">Forgot password?</button><button type="button" class="secondary" id="registerToggleBtn">Create Account</button></div><button type="button" class="secondary hidden" id="logoutBtn">Logout</button></form><div class="status" id="authStatus"></div></section>
 <section class="panel hidden" id="adminAnalyticsTop"><h2>App Analytics</h2><div id="analytics" class="muted">Loading…</div></section>
 <section class="panel hidden" id="profileSection">
 <h2>My Account</h2>
@@ -76,8 +68,7 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 <label class="muted" for="profilePhotoFile">Profile Picture</label><input id="profilePhotoFile" type="file" accept="image/*">
 <button type="submit" id="saveProfileBtn">Save Profile</button>
 </form><div class="status" id="profileStatus"></div>
-<div class="actions"><button type="button" class="secondary" id="shareEarnOpen">Share &amp; Earn</button></div>
-
+<div class="actions"><button type="button" class="secondary" id="shareEarnOpen">Share & Earn</button><button type="button" class="danger" id="profileLogoutBtn">Logout</button></div>
 </section>
 <section class="panel hidden" id="shareEarnSection">
 <h2>Share & Earn</h2>
@@ -122,7 +113,7 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 
 <section class="panel hidden" id="paymentInfoSection"><h2>Payment Information</h2><p class="muted">Your UPI ID is not displayed here. After payment, submit your UTR. The Admin will verify and approve the payment.</p></section>
 </main>
-
+<footer>© Indian Bhabi • Use only content you own or have permission to share.</footer>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
@@ -149,32 +140,7 @@ $("closeNotifications").onclick=()=>$("notificationPanel").classList.add("hidden
 function setGalleryFilter(f){activeGalleryFilter=["all","photo","video"].includes(f)?f:"all";document.querySelectorAll("[data-filter]").forEach(b=>{let a=b.dataset.filter===activeGalleryFilter;b.classList.toggle("active",a);b.classList.toggle("secondary",!a)});loadGallery();$("gallerySection").scrollIntoView({behavior:"smooth"})}window.setGalleryFilter=setGalleryFilter;
 let signupMode=true,autoOtpRequestedFor="",otpVerifyInFlight=false;
 function setSignupMode(on){signupMode=on;$("signupOtpArea").classList.toggle("hidden",!on);document.querySelector(".signup-actions").classList.toggle("hidden",!on);$("signupSwitch").classList.toggle("hidden",!on);document.querySelector(".login-actions").classList.toggle("hidden",on);$("loginBtn").classList.toggle("hidden",on);$("resetBtn").classList.toggle("hidden",on);$("registerToggleBtn").classList.toggle("hidden",on);if(on){setStatus("authStatus","Create your account with email OTP verification.");maybeAutoSendSignupOtp();}else{setStatus("authStatus","Log in with your email and password.");}}
-$("loginForm").addEventListener("submit",async e=>{
- e.preventDefault();
- if(signupMode)setSignupMode(false);
- const email=$("email").value.trim(),password=$("password").value;
- setStatus("authStatus","Logging in…");
- $("loginBtn").disabled=true;
- try{
-  const credential=await auth.signInWithEmailAndPassword(email,password);
-  const signedInUser=auth.currentUser||credential.user;
-  // Apply the logged-in view immediately; do not rely only on the auth listener.
-  showRoleDashboard(signedInUser);
-  $("account").classList.add("hidden");
-  $("profileSection").classList.remove("hidden");
-  $("ibFooterLogoutWrap").classList.remove("hidden");
-  $("notificationBell").classList.remove("hidden");
-  ["email","password"].forEach(id=>$(id).disabled=true);
-  ["loginBtn","registerBtn","resetBtn","loginToggleBtn","registerToggleBtn","sendSignupOtpBtn"].forEach(id=>$(id).classList.add("hidden"));
-  await track("login");
-  setStatus("authStatus","Login successful. Your account is opening…");
-  window.scrollTo({top:0,behavior:"smooth"});
- }catch(x){
-  setStatus("authStatus","Login failed: "+(x&&x.message?x.message:String(x)));
- }finally{
-  if(!auth.currentUser)$("loginBtn").disabled=false;
- }
-});
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();if(signupMode)return;setStatus("authStatus","Logging in…");try{await auth.signInWithEmailAndPassword($("email").value.trim(),$("password").value);await track("login");setStatus("authStatus","Login successful.")}catch(x){setStatus("authStatus","Login failed: "+x.message)}});
 function referralUidFromUrl(){try{const id=new URLSearchParams(location.search).get("ref");return id&&/^[A-Za-z0-9_-]{10,128}$/.test(id)?id:null}catch(e){return null}}
 const incomingReferralUid=referralUidFromUrl();
 let signupOtpVerifiedEmail="";
@@ -206,7 +172,7 @@ $("loginToggleBtn").onclick=()=>setSignupMode(false);
 $("registerToggleBtn").onclick=()=>setSignupMode(true);
 async function createSignupAccount(email,pw){try{let c=await auth.createUserWithEmailAndPassword(email,pw);const newUserData={email,createdAt:firebase.firestore.FieldValue.serverTimestamp()};if(incomingReferralUid&&incomingReferralUid!==c.user.uid){const refSnap=await db.collection("users").doc(incomingReferralUid).get();if(refSnap.exists)newUserData.referredByUid=incomingReferralUid;}await db.collection("users").doc(c.user.uid).set(newUserData,{merge:true});await track("registration");signupOtpVerifiedEmail="";setStatus("authStatus","Account created successfully. You are now logged in.");}catch(x){setStatus("authStatus","Account creation failed: "+x.message);}}
 $("resetBtn").onclick=async()=>{let e=$("email").value.trim();if(!e)return setStatus("authStatus","Please enter your email first.");try{await auth.sendPasswordResetEmail(e);setStatus("authStatus","Password reset link sent.")}catch(x){setStatus("authStatus",x.message)}};
-setSignupMode(false);
+setSignupMode(true);
 $("logoutBtn").onclick=()=>auth.signOut();
 async function getMediaUrl(item){if(item.url)return item.url;if(!item.storagePath)throw Error("Media URL missing");let u=auth.currentUser;if(!u)throw Error("Login required");let token=await u.getIdToken(true),r=await fetch(SUPABASE_URL+"/functions/v1/quick-action",{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_PUBLISHABLE_KEY,"Authorization":"Bearer "+token},body:JSON.stringify({storagePath:item.storagePath})}),j=await r.json().catch(()=>({}));if(!r.ok||!j.success||!j.signedUrl)throw Error(j.error||"Premium access could not be verified");return j.signedUrl}
 function mediaCard(doc,item,url){let c=document.createElement("article");c.className="media-card";let m=document.createElement(item.type==="video"?"video":"img");if(item.type==="video"){m.controls=true;m.preload="metadata"}else{m.loading="lazy";m.alt=item.title||"Gallery image"}m.src=url;c.append(m);let info=document.createElement("div");info.className="media-info";let t=document.createElement("strong");t.textContent=item.title||"Untitled";info.append(t);if(item.description){let d=document.createElement("small");d.textContent=item.description;info.append(d)}if(isAdminUser()){let b=document.createElement("button");b.className="danger";b.textContent="Delete";b.onclick=async()=>{if(!confirm("Delete this item?"))return;try{if(item.storagePath)await supabaseClient.storage.from(BUCKET).remove([item.storagePath]);await db.collection("gallery").doc(doc.id).delete()}catch(e){alert(e.message)}};info.append(b)}c.append(info);return c}
@@ -288,7 +254,7 @@ async function loadAdminUsers(){
 }
 $("refreshUsersBtn").onclick=loadAdminUsers;
 
-async function loadAnalytics(){try{$("analytics").textContent="Loading analytics…";let [ev,users,prem,msg]=await Promise.all([db.collection("analytics").get(),db.collection("users").get(),db.collection("paymentRequests").where("status","==","approved").get(),db.collection("messagePaymentRequests").where("status","==","approved").get()]);let count=t=>ev.docs.filter(d=>d.data().type===t).length;let total=prem.size*199+msg.size*45;$("analytics").innerHTML=`<div class="stats"><div class="stat">App Visits<b>${count("visit")}</b></div><div class="stat">Registrations<b>${count("registration")}</b></div><div class="stat">Logins<b>${count("login")}</b></div><div class="stat">Users<b>${users.size}</b></div><div class="stat">Premium<b>${prem.size}</b></div><div class="stat">Message Purchases<b>${msg.size}</b></div><div class="stat">Live Bookings<b>0</b></div><div class="stat">Approved Revenue<b>₹${total}</b></div></div><p class="small">Visit/login counts are based on browser events. They are estimates, not a secure payment ledger.</p>`}catch(e){$("analytics").textContent="Could not load analytics: "+e.message}}
+async function loadAnalytics(){try{let [ev,users,prem,msg,live]=await Promise.all([db.collection("analytics").get(),db.collection("users").get(),db.collection("paymentRequests").where("status","==","approved").get(),db.collection("messagePaymentRequests").where("status","==","approved").get()]);let count=t=>ev.docs.filter(d=>d.data().type===t).length;let total=prem.size*199+msg.size*45;$("analytics").innerHTML=`<div class="stats"><div class="stat">App Visits<b>${count("visit")}</b></div><div class="stat">Registrations<b>${count("registration")}</b></div><div class="stat">Logins<b>${count("login")}</b></div><div class="stat">Users<b>${users.size}</b></div><div class="stat">Premium<b>${prem.size}</b></div><div class="stat">Message Purchases<b>${msg.size}</b></div><div class="stat">Live Bookings<b>0</b></div><div class="stat">Approved Revenue<b>₹${total}</b></div></div><p class="small">Visit/login counts are based on browser events. They are estimates, not a secure payment ledger.</p>`}catch(e){$("analytics").textContent="Could not load analytics: "+e.message}}
 
 const DEFAULT_AVATAR="data:image/svg+xml;charset=UTF-8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><rect width="100%" height="100%" fill="#24211b"/><circle cx="80" cy="58" r="29" fill="#d7ad55"/><path d="M25 150c5-34 27-51 55-51s50 17 55 51" fill="#d7ad55"/></svg>');
 $("profilePreview").src=DEFAULT_AVATAR;
@@ -303,14 +269,8 @@ async function loadProfile(u){
  $("profileEmail").textContent=u.email||"";
  $("profileName").value="";$("profilePhone").value="";$("profileGender").value="";
  $("profilePreview").src=DEFAULT_AVATAR;
- $("profileStatus").textContent="Loading profile…";
- $("subscriptionStatus").textContent=isAdminUser(u)?"Admin Account • Full Admin Access":"Subscription status loading…";
  try{
-  const snap=await new Promise((resolve,reject)=>{
-   const timer=setTimeout(()=>reject(new Error("Profile request timed out. Please check the Firestore connection and security rules.")),15000);
-   db.collection("users").doc(u.uid).get().then(value=>{clearTimeout(timer);resolve(value);},error=>{clearTimeout(timer);reject(error);});
-  });
-  const d=snap.exists?snap.data():{};
+  const snap=await db.collection("users").doc(u.uid).get(),d=snap.exists?snap.data():{};
   $("profileName").value=d.displayName||d.name||"";
   $("profilePhone").value=d.phone||"";
   $("profileGender").value=d.gender||"";
@@ -319,11 +279,7 @@ async function loadProfile(u){
   if(isAdminUser(u))$("subscriptionStatus").textContent="Admin Account • Full Admin Access";
   else if(d.premium===true&&exp&&exp.toMillis&&exp.toMillis()>Date.now())$("subscriptionStatus").textContent="Premium Active • Expires: "+exp.toDate().toLocaleString("en-IN");
   else $("subscriptionStatus").textContent="Free Account • Premium not active";
-  $("profileStatus").textContent="";
- }catch(e){
-  setStatus("profileStatus","Could not load profile: "+e.message);
-  $("subscriptionStatus").textContent=isAdminUser(u)?"Admin Account • Full Admin Access":"Could not load subscription status: "+e.message;
- }
+ }catch(e){setStatus("profileStatus","Could not load profile: "+e.message)}
 }
 $("profileForm").onsubmit=async e=>{
  e.preventDefault();const u=auth.currentUser;if(!u)return;
@@ -352,7 +308,6 @@ $("shareReferralBtn").onclick=async()=>{const url=$("referralLink").textContent;
 function showRoleDashboard(u){
  const admin=isAdminUser(u),loggedIn=!!u;
  $("notificationBell").classList.toggle("hidden",!loggedIn);
- $("ibFooterLogoutWrap").classList.toggle("hidden",!loggedIn);
  $("account").classList.toggle("hidden",loggedIn);
  $("profileSection").classList.toggle("hidden",!loggedIn);
  $("adminPanel").classList.toggle("hidden",!admin);
@@ -366,7 +321,6 @@ function showRoleDashboard(u){
 auth.onAuthStateChanged(async u=>{
  const admin=isAdminUser(u);showRoleDashboard(u);
  $("logoutBtn").classList.add("hidden");
- $("ibFooterLogoutWrap").classList.toggle("hidden",!u);
  ["email","password"].forEach(id=>$(id).disabled=!!u);
  if(u){["loginBtn","registerBtn","resetBtn","loginToggleBtn","registerToggleBtn","sendSignupOtpBtn"].forEach(id=>$(id).classList.add("hidden"));}else{setSignupMode(signupMode);}
  setStatus("authStatus",u?(admin?"Logged in as Admin.":"Logged in as User."):"Log in or create an account.");
@@ -374,13 +328,7 @@ auth.onAuthStateChanged(async u=>{
  if(chatUnsubscribe){chatUnsubscribe();chatUnsubscribe=null}
  if(notificationUnsubscribe){notificationUnsubscribe();notificationUnsubscribe=null}
  activeConversation=null;
- if(u){
-  listenNotifications();
-  loadProfile(u);
-  loadGallery();
-  if(!admin){listenMyConversations()}
-  else{loadAdminRequests();loadAdminInbox();loadAdminUsers();loadAnalytics()}
- }
+ if(u){listenNotifications();await loadProfile(u);loadGallery();if(!admin){listenMyConversations()}else{loadAdminRequests();loadAdminInbox();loadAdminUsers();loadAnalytics()}}
  else{$("notificationBell").classList.add("hidden");$("notificationPanel").classList.add("hidden");$("galleryList").replaceChildren();setStatus("galleryStatus","Log in to view the gallery.");$("myConversations").textContent="Log in to view your conversations."}
 });
 let visitKey="ib_visit_"+new Date().toISOString().slice(0,10);if(!sessionStorage.getItem(visitKey)){sessionStorage.setItem(visitKey,"1");track("visit")}
@@ -456,10 +404,4 @@ if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serv
     <span>Instagram</span>
   </a>
 </footer>
-<a id="ibHelpSupport" href="mailto:misiroy75@gmail.com?subject=Indian%20Bhabi%20Help%20%26%20Support" aria-label="Email Help and Support">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3h13A2.5 2.5 0 0 1 21 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-13Zm2 .15v.2l7 5.1 7-5.1v-.2a.5.5 0 0 0-.5-.5h-13a.5.5 0 0 0-.5.5Zm14 2.66-6.41 4.67a1 1 0 0 1-1.18 0L5 8.31v10.19a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5V8.31Z"/></svg>
-  <span>Help &amp; Support</span>
-</a>
-<div id="ibFooterLogoutWrap" class="hidden"><button type="button" class="danger profile-logout-small" id="profileLogoutBtn">Logout</button></div>
-<footer id="ibCopyrightFooter">© Indian Bhabi • Use only content you own or have permission to share.</footer>
 </body></html>
