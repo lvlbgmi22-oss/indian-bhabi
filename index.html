@@ -45,7 +45,7 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 <form id="loginForm"><input id="email" type="email" placeholder="Email address" autocomplete="username" required>
 <input id="password" type="password" placeholder="Password (minimum 6 characters)" minlength="6" required>
 <div id="signupOtpArea" class="hidden"><input id="signupOtp" type="text" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="Enter 4-digit email OTP"><div class="actions"><button type="button" class="secondary" id="sendSignupOtpBtn">Send Email OTP</button><button type="button" class="secondary" id="verifySignupOtpBtn">Verify OTP</button></div><div class="muted" id="signupOtpStatus"></div></div>
-<div class="actions"><button type="submit" id="loginBtn">Login</button><button type="button" class="secondary" id="registerBtn">Create User Account</button><button type="button" class="secondary" id="resetBtn">Forgot password?</button><button type="button" class="secondary hidden" id="logoutBtn">Logout</button></div></form><div class="status" id="authStatus"></div></section>
+<div class="actions"><button type="submit" id="loginBtn">Login</button><button type="button" class="secondary" id="resetBtn" style="font-size:12px;padding:7px 10px">Forgot password?</button><button type="button" class="secondary" id="registerBtn">Create User Account</button><button type="button" class="secondary hidden" id="logoutBtn">Logout</button></div></form><div class="status" id="authStatus"></div></section>
 <section class="panel hidden" id="adminAnalyticsTop"><h2>App Analytics</h2><div id="analytics" class="muted">Loading…</div></section>
 <section class="panel hidden" id="profileSection">
 <h2>My Account</h2>
@@ -133,7 +133,8 @@ $("notificationBell").onclick=()=>{$("notificationPanel").classList.toggle("hidd
 $("closeNotifications").onclick=()=>$("notificationPanel").classList.add("hidden");
 
 function setGalleryFilter(f){activeGalleryFilter=["all","photo","video"].includes(f)?f:"all";document.querySelectorAll("[data-filter]").forEach(b=>{let a=b.dataset.filter===activeGalleryFilter;b.classList.toggle("active",a);b.classList.toggle("secondary",!a)});loadGallery();$("gallerySection").scrollIntoView({behavior:"smooth"})}window.setGalleryFilter=setGalleryFilter;
-$("loginForm").addEventListener("submit",async e=>{e.preventDefault();setStatus("authStatus","Logging in…");try{await auth.signInWithEmailAndPassword($("email").value.trim(),$("password").value);await track("login");setStatus("authStatus","Login successful.")}catch(x){setStatus("authStatus","Login failed: "+x.message)}});
+let signupMode=false,autoOtpRequestedFor="";
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();if(signupMode)return;setStatus("authStatus","Logging in…");try{await auth.signInWithEmailAndPassword($("email").value.trim(),$("password").value);await track("login");setStatus("authStatus","Login successful.")}catch(x){setStatus("authStatus","Login failed: "+x.message)}});
 function referralUidFromUrl(){try{const id=new URLSearchParams(location.search).get("ref");return id&&/^[A-Za-z0-9_-]{10,128}$/.test(id)?id:null}catch(e){return null}}
 const incomingReferralUid=referralUidFromUrl();
 let signupOtpVerifiedEmail="";
@@ -145,13 +146,31 @@ async function callEmailOtp(action,otp=""){
  if(!response.ok||!result.success)throw new Error(result.message||"OTP request failed.");
  return result;
 }
-$("registerBtn").onclick=()=>{$("signupOtpArea").classList.remove("hidden");setStatus("authStatus","First verify your email with the 4-digit OTP.");};
+async function maybeAutoSendSignupOtp(){
+ if(!signupMode)return;
+ const email=$("email").value.trim().toLowerCase(),pw=$("password").value;
+ if(!email||!/^\S+@\S+\.\S+$/.test(email)||pw.length<6||autoOtpRequestedFor===email)return;
+ autoOtpRequestedFor=email;
+ const b=$("sendSignupOtpBtn");if(b.disabled)return;
+ b.disabled=true;b.textContent="Sending…";
+ try{const r=await callEmailOtp("send");signupOtpVerifiedEmail="";$("signupOtp").value="";setStatus("signupOtpStatus",r.message||"OTP sent to your email.");startOtpResendCooldown(30);}
+ catch(x){autoOtpRequestedFor="";setStatus("signupOtpStatus",x.message||"OTP send failed. Tap Resend OTP to try again.");b.disabled=false;b.textContent="Try Send OTP Again";}
+}
+$("registerBtn").onclick=()=>{
+ if(!signupMode){signupMode=true;$("loginBtn").classList.add("hidden");$("signupOtpArea").classList.remove("hidden");$("registerBtn").textContent="Create Account";setStatus("authStatus","Enter your email and password. OTP will be sent automatically.");maybeAutoSendSignupOtp();return;}
+ const email=$("email").value.trim().toLowerCase(),pw=$("password").value;
+ if(!email||pw.length<6){setStatus("authStatus","Enter a valid email and password (minimum 6 characters).");return;}
+ if(signupOtpVerifiedEmail!==email){$("signupOtpArea").classList.remove("hidden");setStatus("authStatus","Please verify the 4-digit OTP sent to your email first.");return;}
+ createSignupAccount(email,pw);
+};
+$("email").addEventListener("input",()=>{signupOtpVerifiedEmail="";autoOtpRequestedFor="";if(signupMode)maybeAutoSendSignupOtp();});
+$("password").addEventListener("input",()=>{if(signupMode)maybeAutoSendSignupOtp();});
 let otpResendTimer=null;
 function startOtpResendCooldown(seconds=30){
  const b=$("sendSignupOtpBtn");let remaining=seconds;
  if(otpResendTimer)clearInterval(otpResendTimer);
  b.disabled=true;b.textContent=`Resend OTP (${remaining}s)`;
- otpResendTimer=setInterval(()=>{remaining--;if(remaining<=0){clearInterval(otpResendTimer);otpResendTimer=null;b.disabled=false;b.textContent="Resend OTP";}else{b.textContent=`Resend OTP (${remaining}s)`;}},1000);
+ otpResendTimer=setInterval(()=>{remaining--;if(remaining<=0){clearInterval(otpResendTimer);otpResendTimer=null;b.disabled=false;b.textContent="Resend OTP";if(signupMode&&autoOtpRequestedFor!==$("email").value.trim().toLowerCase())maybeAutoSendSignupOtp();}else{b.textContent=`Resend OTP (${remaining}s)`;}},1000);
 }
 $("sendSignupOtpBtn").onclick=async()=>{
  const b=$("sendSignupOtpBtn");if(b.disabled)return;
@@ -163,9 +182,8 @@ $("sendSignupOtpBtn").onclick=async()=>{
   startOtpResendCooldown(30);
  }catch(x){setStatus("signupOtpStatus",x.message||"OTP could not be sent. Please try again.");b.disabled=false;b.textContent="Try Send OTP Again";}
 };
-$("email").addEventListener("input",()=>{signupOtpVerifiedEmail="";});
 $("verifySignupOtpBtn").onclick=async()=>{const b=$("verifySignupOtpBtn");b.disabled=true;try{const email=$("email").value.trim().toLowerCase(),otp=$("signupOtp").value.trim();const r=await callEmailOtp("verify",otp);signupOtpVerifiedEmail=email;setStatus("signupOtpStatus",r.message||"Email verified. You can create your account now.")}catch(x){signupOtpVerifiedEmail="";setStatus("signupOtpStatus",x.message)}finally{b.disabled=false}};
-$("registerBtn").onclick=async()=>{const email=$("email").value.trim().toLowerCase(),pw=$("password").value;if(!email)return setStatus("authStatus","Please enter your email first.");if(pw.length<6)return setStatus("authStatus","Password must be at least 6 characters.");if(signupOtpVerifiedEmail!==email){$("signupOtpArea").classList.remove("hidden");return setStatus("authStatus","Verify the email OTP first.");}try{let c=await auth.createUserWithEmailAndPassword(email,pw);const newUserData={email,createdAt:firebase.firestore.FieldValue.serverTimestamp()};
+async function createSignupAccount(email,pw){try{let c=await auth.createUserWithEmailAndPassword(email,pw);const newUserData={email,createdAt:firebase.firestore.FieldValue.serverTimestamp()};
 if(incomingReferralUid&&incomingReferralUid!==c.user.uid){const refSnap=await db.collection("users").doc(incomingReferralUid).get();if(refSnap.exists)newUserData.referredByUid=incomingReferralUid;}
 await db.collection("users").doc(c.user.uid).set(newUserData,{merge:true});await track("registration");signupOtpVerifiedEmail="";setStatus("authStatus","Account created successfully. You are now logged in.")}catch(x){setStatus("authStatus","Account creation failed: "+x.message)}};
 $("resetBtn").onclick=async()=>{let e=$("email").value.trim();if(!e)return setStatus("authStatus","Please enter your email first.");try{await auth.sendPasswordResetEmail(e);setStatus("authStatus","Password reset link sent.")}catch(x){setStatus("authStatus",x.message)}};
@@ -318,7 +336,7 @@ auth.onAuthStateChanged(async u=>{
  const admin=isAdminUser(u);showRoleDashboard(u);
  $("logoutBtn").classList.add("hidden");
  ["email","password"].forEach(id=>$(id).disabled=!!u);
- ["loginBtn","registerBtn","resetBtn"].forEach(id=>$(id).classList.toggle("hidden",!!u));
+ ["loginBtn","registerBtn","resetBtn"].forEach(id=>$(id).classList.toggle("hidden",!!u));if(!u&&signupMode){$("loginBtn").classList.add("hidden");$("signupOtpArea").classList.remove("hidden");}
  setStatus("authStatus",u?(admin?"Logged in as Admin.":"Logged in as User."):"Log in or create an account.");
  if(galleryUnsubscribe){galleryUnsubscribe();galleryUnsubscribe=null}
  if(chatUnsubscribe){chatUnsubscribe();chatUnsubscribe=null}
