@@ -146,7 +146,24 @@ async function callEmailOtp(action,otp=""){
  return result;
 }
 $("registerBtn").onclick=()=>{$("signupOtpArea").classList.remove("hidden");setStatus("authStatus","First verify your email with the 4-digit OTP.");};
-$("sendSignupOtpBtn").onclick=async()=>{const b=$("sendSignupOtpBtn");b.disabled=true;try{const r=await callEmailOtp("send");signupOtpVerifiedEmail="";setStatus("signupOtpStatus",r.message||"OTP sent. Check Inbox and Spam.")}catch(x){setStatus("signupOtpStatus",x.message)}finally{b.disabled=false}};
+let otpResendTimer=null;
+function startOtpResendCooldown(seconds=30){
+ const b=$("sendSignupOtpBtn");let remaining=seconds;
+ if(otpResendTimer)clearInterval(otpResendTimer);
+ b.disabled=true;b.textContent=`Resend OTP (${remaining}s)`;
+ otpResendTimer=setInterval(()=>{remaining--;if(remaining<=0){clearInterval(otpResendTimer);otpResendTimer=null;b.disabled=false;b.textContent="Resend OTP";}else{b.textContent=`Resend OTP (${remaining}s)`;}},1000);
+}
+$("sendSignupOtpBtn").onclick=async()=>{
+ const b=$("sendSignupOtpBtn");if(b.disabled)return;
+ b.disabled=true;b.textContent="Sending…";
+ try{
+  const r=await callEmailOtp("send");signupOtpVerifiedEmail="";
+  $("signupOtp").value="";
+  setStatus("signupOtpStatus",r.message||"OTP sent. Check Inbox and Spam.");
+  startOtpResendCooldown(30);
+ }catch(x){setStatus("signupOtpStatus",x.message||"OTP could not be sent. Please try again.");b.disabled=false;b.textContent="Try Send OTP Again";}
+};
+$("email").addEventListener("input",()=>{signupOtpVerifiedEmail="";});
 $("verifySignupOtpBtn").onclick=async()=>{const b=$("verifySignupOtpBtn");b.disabled=true;try{const email=$("email").value.trim().toLowerCase(),otp=$("signupOtp").value.trim();const r=await callEmailOtp("verify",otp);signupOtpVerifiedEmail=email;setStatus("signupOtpStatus",r.message||"Email verified. You can create your account now.")}catch(x){signupOtpVerifiedEmail="";setStatus("signupOtpStatus",x.message)}finally{b.disabled=false}};
 $("registerBtn").onclick=async()=>{const email=$("email").value.trim().toLowerCase(),pw=$("password").value;if(!email)return setStatus("authStatus","Please enter your email first.");if(pw.length<6)return setStatus("authStatus","Password must be at least 6 characters.");if(signupOtpVerifiedEmail!==email){$("signupOtpArea").classList.remove("hidden");return setStatus("authStatus","Verify the email OTP first.");}try{let c=await auth.createUserWithEmailAndPassword(email,pw);const newUserData={email,createdAt:firebase.firestore.FieldValue.serverTimestamp()};
 if(incomingReferralUid&&incomingReferralUid!==c.user.uid){const refSnap=await db.collection("users").doc(incomingReferralUid).get();if(refSnap.exists)newUserData.referredByUid=incomingReferralUid;}
