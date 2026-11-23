@@ -250,11 +250,26 @@ async function loadAdminUsers(){
  try{const snap=await db.collection("users").get();box.replaceChildren();if(snap.empty){box.textContent="No users found.";return;}
  const rows=snap.docs.map(d=>({id:d.id,data:d.data()})).sort((a,b)=>{const at=a.data.createdAt&&a.data.createdAt.toMillis?a.data.createdAt.toMillis():0,bt=b.data.createdAt&&b.data.createdAt.toMillis?b.data.createdAt.toMillis():0;return bt-at;});
  rows.forEach(({id,data})=>{const card=document.createElement("div");card.className="user-row";const name=document.createElement("b");name.textContent=data.displayName||data.name||"Name not set";const details=document.createElement("div");details.className="small";const exp=data.premiumUntil&&data.premiumUntil.toDate?data.premiumUntil.toDate().toLocaleString("en-IN"):"—";details.textContent="Email: "+(data.email||"—")+" | Phone: "+(data.phone||"—")+" | Gender: "+(data.gender||"—")+" | Premium: "+(data.premium===true?"Yes":"No")+" | Expiry: "+exp+" | UID: "+id;card.append(name,details);box.append(card)});
- }catch(e){box.textContent="Could not load users: "+e.message}
+ }catch(e){box.textContent="Could not load users: "+e.message;console.error("Admin users load failed",e)}
 }
 $("refreshUsersBtn").onclick=loadAdminUsers;
 
-async function loadAnalytics(){try{let [ev,users,prem,msg,live]=await Promise.all([db.collection("analytics").get(),db.collection("users").get(),db.collection("paymentRequests").where("status","==","approved").get(),db.collection("messagePaymentRequests").where("status","==","approved").get()]);let count=t=>ev.docs.filter(d=>d.data().type===t).length;let total=prem.size*199+msg.size*45;$("analytics").innerHTML=`<div class="stats"><div class="stat">App Visits<b>${count("visit")}</b></div><div class="stat">Registrations<b>${count("registration")}</b></div><div class="stat">Logins<b>${count("login")}</b></div><div class="stat">Users<b>${users.size}</b></div><div class="stat">Premium<b>${prem.size}</b></div><div class="stat">Message Purchases<b>${msg.size}</b></div><div class="stat">Live Bookings<b>0</b></div><div class="stat">Approved Revenue<b>₹${total}</b></div></div><p class="small">Visit/login counts are based on browser events. They are estimates, not a secure payment ledger.</p>`}catch(e){$("analytics").textContent="Could not load analytics: "+e.message}}
+async function loadAnalytics(){
+ const box=$("analytics");box.textContent="Loading analytics…";
+ const jobs=await Promise.allSettled([
+  db.collection("analytics").get(),
+  db.collection("users").get(),
+  db.collection("paymentRequests").where("status","==","approved").get(),
+  db.collection("messagePaymentRequests").where("status","==","approved").get()
+ ]);
+ const [ev,users,prem,msg]=jobs.map(x=>x.status==="fulfilled"?x.value:null);
+ const count=t=>ev?ev.docs.filter(d=>d.data().type===t).length:"—";
+ const userCount=users?users.size:"—",premiumCount=prem?prem.size:"—",messageCount=msg?msg.size:"—";
+ const total=prem&&msg?prem.size*199+msg.size*45:"—";
+ box.innerHTML=`<div class="stats"><div class="stat">App Visits<b>${count("visit")}</b></div><div class="stat">Registrations<b>${count("registration")}</b></div><div class="stat">Logins<b>${count("login")}</b></div><div class="stat">Users<b>${userCount}</b></div><div class="stat">Premium<b>${premiumCount}</b></div><div class="stat">Message Purchases<b>${messageCount}</b></div><div class="stat">Live Bookings<b>—</b></div><div class="stat">Approved Revenue<b>${total==="—"?"—":"₹"+total}</b></div></div><p class="small">Visit/login counts are based on browser events. They are estimates, not a secure payment ledger.</p>`;
+ const errors=jobs.map((x,i)=>x.status==="rejected"?(["Analytics events","Users","Premium payments","Message payments"][i]+": "+(x.reason?.message||"Permission or network error")):null).filter(Boolean);
+ if(errors.length){const note=document.createElement("p");note.className="status";note.textContent="Some analytics data could not load: "+errors.join(" | ");box.append(note)}
+}
 
 const DEFAULT_AVATAR="data:image/svg+xml;charset=UTF-8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><rect width="100%" height="100%" fill="#24211b"/><circle cx="80" cy="58" r="29" fill="#d7ad55"/><path d="M25 150c5-34 27-51 55-51s50 17 55 51" fill="#d7ad55"/></svg>');
 $("profilePreview").src=DEFAULT_AVATAR;
@@ -279,7 +294,7 @@ async function loadProfile(u){
   if(isAdminUser(u))$("subscriptionStatus").textContent="Admin Account • Full Admin Access";
   else if(d.premium===true&&exp&&exp.toMillis&&exp.toMillis()>Date.now())$("subscriptionStatus").textContent="Premium Active • Expires: "+exp.toDate().toLocaleString("en-IN");
   else $("subscriptionStatus").textContent="Free Account • Premium not active";
- }catch(e){setStatus("profileStatus","Could not load profile: "+e.message)}
+ }catch(e){$("subscriptionStatus").textContent="Account status unavailable: "+e.message;setStatus("profileStatus","Could not load profile: "+e.message)}
 }
 $("profileForm").onsubmit=async e=>{
  e.preventDefault();const u=auth.currentUser;if(!u)return;
@@ -310,6 +325,7 @@ function showRoleDashboard(u){
  $("notificationBell").classList.toggle("hidden",!loggedIn);
  $("account").classList.toggle("hidden",loggedIn);
  $("profileSection").classList.toggle("hidden",!loggedIn);
+ $("profileLogoutBtn").classList.toggle("hidden",!loggedIn);
  $("adminPanel").classList.toggle("hidden",!admin);
  $("adminAnalyticsTop").classList.toggle("hidden",!admin);
  $("userHero").classList.toggle("hidden",!loggedIn||admin);
@@ -328,8 +344,15 @@ auth.onAuthStateChanged(async u=>{
  if(chatUnsubscribe){chatUnsubscribe();chatUnsubscribe=null}
  if(notificationUnsubscribe){notificationUnsubscribe();notificationUnsubscribe=null}
  activeConversation=null;
- if(u){listenNotifications();await loadProfile(u);loadGallery();if(!admin){listenMyConversations()}else{loadAdminRequests();loadAdminInbox();loadAdminUsers();loadAnalytics()}}
- else{$("notificationBell").classList.add("hidden");$("notificationPanel").classList.add("hidden");$("galleryList").replaceChildren();setStatus("galleryStatus","Log in to view the gallery.");$("myConversations").textContent="Log in to view your conversations."}
+ if(u){
+  listenNotifications();
+  if(admin){
+   // Start admin data panels independently; a slow profile read must not block them.
+   loadAdminRequests();loadAdminInbox();loadAdminUsers();loadAnalytics();
+  }else{listenMyConversations()}
+  loadProfile(u).catch(e=>{console.error("Profile load failed",e);$("subscriptionStatus").textContent="Account status unavailable: "+(e.message||e)});
+  loadGallery();
+ }else{$("notificationBell").classList.add("hidden");$("notificationPanel").classList.add("hidden");$("galleryList").replaceChildren();setStatus("galleryStatus","Log in to view the gallery.");$("myConversations").textContent="Log in to view your conversations."}
 });
 let visitKey="ib_visit_"+new Date().toISOString().slice(0,10);if(!sessionStorage.getItem(visitKey)){sessionStorage.setItem(visitKey,"1");track("visit")}
 if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
