@@ -149,7 +149,7 @@ $("closeNotifications").onclick=()=>$("notificationPanel").classList.add("hidden
 function setGalleryFilter(f){activeGalleryFilter=["all","photo","video"].includes(f)?f:"all";document.querySelectorAll("[data-filter]").forEach(b=>{let a=b.dataset.filter===activeGalleryFilter;b.classList.toggle("active",a);b.classList.toggle("secondary",!a)});loadGallery();$("gallerySection").scrollIntoView({behavior:"smooth"})}window.setGalleryFilter=setGalleryFilter;
 let signupMode=true,autoOtpRequestedFor="",otpVerifyInFlight=false;
 function setSignupMode(on){signupMode=on;$("signupOtpArea").classList.toggle("hidden",!on);document.querySelector(".signup-actions").classList.toggle("hidden",!on);$("signupSwitch").classList.toggle("hidden",!on);document.querySelector(".login-actions").classList.toggle("hidden",on);$("loginBtn").classList.toggle("hidden",on);$("resetBtn").classList.toggle("hidden",on);$("registerToggleBtn").classList.toggle("hidden",on);if(on){setStatus("authStatus","Create your account with email OTP verification.");maybeAutoSendSignupOtp();}else{setStatus("authStatus","Log in with your email and password.");}}
-$("loginForm").addEventListener("submit",async e=>{e.preventDefault();if(signupMode)return;setStatus("authStatus","Logging in…");try{await auth.signInWithEmailAndPassword($("email").value.trim(),$("password").value);await track("login");setStatus("authStatus","Login successful.")}catch(x){setStatus("authStatus","Login failed: "+x.message)}});
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();if(signupMode){setSignupMode(false);}const email=$("email").value.trim(),password=$("password").value;setStatus("authStatus","Logging in…");$("loginBtn").disabled=true;try{const credential=await auth.signInWithEmailAndPassword(email,password);await track("login");showRoleDashboard(credential.user);$("account").classList.add("hidden");$("profileSection").classList.remove("hidden");$("userHero").classList.toggle("hidden",isAdminUser(credential.user));$("userTiles").classList.toggle("hidden",isAdminUser(credential.user));$("ibFooterLogoutWrap").classList.remove("hidden");setStatus("authStatus","Login successful.");window.scrollTo({top:0,behavior:"smooth"});}catch(x){setStatus("authStatus","Login failed: "+x.message)}finally{$("loginBtn").disabled=false}});
 function referralUidFromUrl(){try{const id=new URLSearchParams(location.search).get("ref");return id&&/^[A-Za-z0-9_-]{10,128}$/.test(id)?id:null}catch(e){return null}}
 const incomingReferralUid=referralUidFromUrl();
 let signupOtpVerifiedEmail="";
@@ -317,6 +317,7 @@ $("shareReferralBtn").onclick=async()=>{const url=$("referralLink").textContent;
 function showRoleDashboard(u){
  const admin=isAdminUser(u),loggedIn=!!u;
  $("notificationBell").classList.toggle("hidden",!loggedIn);
+ $("ibFooterLogoutWrap").classList.toggle("hidden",!loggedIn);
  $("account").classList.toggle("hidden",loggedIn);
  $("profileSection").classList.toggle("hidden",!loggedIn);
  $("adminPanel").classList.toggle("hidden",!admin);
@@ -330,6 +331,7 @@ function showRoleDashboard(u){
 auth.onAuthStateChanged(async u=>{
  const admin=isAdminUser(u);showRoleDashboard(u);
  $("logoutBtn").classList.add("hidden");
+ $("ibFooterLogoutWrap").classList.toggle("hidden",!u);
  ["email","password"].forEach(id=>$(id).disabled=!!u);
  if(u){["loginBtn","registerBtn","resetBtn","loginToggleBtn","registerToggleBtn","sendSignupOtpBtn"].forEach(id=>$(id).classList.add("hidden"));}else{setSignupMode(signupMode);}
  setStatus("authStatus",u?(admin?"Logged in as Admin.":"Logged in as User."):"Log in or create an account.");
