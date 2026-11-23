@@ -23,6 +23,10 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 
 
 .profile-bottom-links{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin-top:20px;padding-top:12px;border-top:1px solid rgba(128,128,128,.18)}.profile-logout-small{font-size:11px!important;padding:6px 10px!important;border-radius:7px!important}.help-support-link{font-size:12px;color:var(--gold2);text-decoration:underline;padding:3px 1px}
+#ibHelpSupport{display:flex;width:max-content;margin:12px auto 0;align-items:center;gap:7px;color:inherit;text-decoration:none;font-size:12px;padding:7px 12px;border:1px solid rgba(128,128,128,.3);border-radius:999px}
+#ibHelpSupport svg{width:17px;height:17px;fill:currentColor}
+#ibFooterLogoutWrap{text-align:center;margin:10px auto 0}
+#ibCopyrightFooter{margin-top:30px;padding:24px 10px 42px;border-top:1px solid var(--line);text-align:center;color:#777;font-size:12px}
 </style>
 
 <style>
@@ -39,7 +43,7 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 <header><div class="brand">INDIAN BHABI</div><div class="tag">EXCLUSIVE UNCUT CONTENT</div><button id="notificationBell" class="secondary hidden" aria-label="Notifications" title="Notifications" style="position:absolute;right:14px;top:14px;padding:9px 12px;font-size:22px">🔔<span id="notificationCount" style="font-size:11px;margin-left:4px"></span></button></header>
 <section id="notificationPanel" class="panel hidden" style="max-width:960px;margin:12px auto;padding:14px"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:4px 0">Notifications</h2><button type="button" class="secondary" id="closeNotifications">Close</button></div><div id="notificationList" class="muted">No notifications yet.</div></section>
 <main>
-<section class="hero hidden" id="userHero"><h2>Welcome to Indian Bhabi</h2><p>A Black & Gold Premium Gallery</p></section>
+<section class="hero hidden" id="userHero"><h2>Welcome to Indian Bhabi</h2><p>I Am Waiting For You</p></section>
 <section class="tiles hidden" id="userTiles">
 <div class="tile" onclick="setGalleryFilter('photo')"><span>▧</span>Photo Gallery</div>
 <div class="tile" onclick="setGalleryFilter('video')"><span>▶</span>Video Gallery</div>
@@ -73,7 +77,7 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 <button type="submit" id="saveProfileBtn">Save Profile</button>
 </form><div class="status" id="profileStatus"></div>
 <div class="actions"><button type="button" class="secondary" id="shareEarnOpen">Share &amp; Earn</button></div>
-<div class="profile-bottom-links"><button type="button" class="danger profile-logout-small" id="profileLogoutBtn">Logout</button></div>
+
 </section>
 <section class="panel hidden" id="shareEarnSection">
 <h2>Share & Earn</h2>
@@ -118,7 +122,7 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 
 <section class="panel hidden" id="paymentInfoSection"><h2>Payment Information</h2><p class="muted">Your UPI ID is not displayed here. After payment, submit your UTR. The Admin will verify and approve the payment.</p></section>
 </main>
-<footer>© Indian Bhabi • Use only content you own or have permission to share.</footer>
+
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
@@ -413,4 +417,6 @@ if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serv
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3h13A2.5 2.5 0 0 1 21 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-13Zm2 .15v.2l7 5.1 7-5.1v-.2a.5.5 0 0 0-.5-.5h-13a.5.5 0 0 0-.5.5Zm14 2.66-6.41 4.67a1 1 0 0 1-1.18 0L5 8.31v10.19a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5V8.31Z"/></svg>
   <span>Help &amp; Support</span>
 </a>
+<div id="ibFooterLogoutWrap"><button type="button" class="danger profile-logout-small" id="profileLogoutBtn">Logout</button></div>
+<footer id="ibCopyrightFooter">© Indian Bhabi • Use only content you own or have permission to share.</footer>
 </body></html>
