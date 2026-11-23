@@ -43,7 +43,7 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 <header><div class="brand">INDIAN BHABI</div><div class="tag">EXCLUSIVE UNCUT CONTENT</div><button id="notificationBell" class="secondary hidden" aria-label="Notifications" title="Notifications" style="position:absolute;right:14px;top:14px;padding:9px 12px;font-size:22px">🔔<span id="notificationCount" style="font-size:11px;margin-left:4px"></span></button></header>
 <section id="notificationPanel" class="panel hidden" style="max-width:960px;margin:12px auto;padding:14px"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:4px 0">Notifications</h2><button type="button" class="secondary" id="closeNotifications">Close</button></div><div id="notificationList" class="muted">No notifications yet.</div></section>
 <main>
-<section class="hero hidden" id="userHero"><h2>Welcome to Indian Bhabi</h2><p>I Am Waiting For You</p></section>
+<section class="hero hidden" id="userHero"><h2>Welcome to Indian Bhabi</h2><p>A Black & Gold Premium Gallery</p></section>
 <section class="tiles hidden" id="userTiles">
 <div class="tile" onclick="setGalleryFilter('photo')"><span>▧</span>Photo Gallery</div>
 <div class="tile" onclick="setGalleryFilter('video')"><span>▶</span>Video Gallery</div>
@@ -149,7 +149,7 @@ $("closeNotifications").onclick=()=>$("notificationPanel").classList.add("hidden
 function setGalleryFilter(f){activeGalleryFilter=["all","photo","video"].includes(f)?f:"all";document.querySelectorAll("[data-filter]").forEach(b=>{let a=b.dataset.filter===activeGalleryFilter;b.classList.toggle("active",a);b.classList.toggle("secondary",!a)});loadGallery();$("gallerySection").scrollIntoView({behavior:"smooth"})}window.setGalleryFilter=setGalleryFilter;
 let signupMode=true,autoOtpRequestedFor="",otpVerifyInFlight=false;
 function setSignupMode(on){signupMode=on;$("signupOtpArea").classList.toggle("hidden",!on);document.querySelector(".signup-actions").classList.toggle("hidden",!on);$("signupSwitch").classList.toggle("hidden",!on);document.querySelector(".login-actions").classList.toggle("hidden",on);$("loginBtn").classList.toggle("hidden",on);$("resetBtn").classList.toggle("hidden",on);$("registerToggleBtn").classList.toggle("hidden",on);if(on){setStatus("authStatus","Create your account with email OTP verification.");maybeAutoSendSignupOtp();}else{setStatus("authStatus","Log in with your email and password.");}}
-$("loginForm").addEventListener("submit",async e=>{e.preventDefault();if(signupMode){setSignupMode(false);}const email=$("email").value.trim(),password=$("password").value;setStatus("authStatus","Logging in…");$("loginBtn").disabled=true;try{const credential=await auth.signInWithEmailAndPassword(email,password);await track("login");showRoleDashboard(credential.user);$("account").classList.add("hidden");$("profileSection").classList.remove("hidden");$("userHero").classList.toggle("hidden",isAdminUser(credential.user));$("userTiles").classList.toggle("hidden",isAdminUser(credential.user));$("ibFooterLogoutWrap").classList.remove("hidden");setStatus("authStatus","Login successful.");window.scrollTo({top:0,behavior:"smooth"});}catch(x){setStatus("authStatus","Login failed: "+x.message)}finally{$("loginBtn").disabled=false}});
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();if(signupMode)setSignupMode(false);const email=$("email").value.trim(),password=$("password").value;setStatus("authStatus","Logging in…");$("loginBtn").disabled=true;try{await auth.signInWithEmailAndPassword(email,password);await track("login");setStatus("authStatus","Login successful.");window.scrollTo({top:0,behavior:"smooth"});}catch(x){setStatus("authStatus","Login failed: "+x.message)}finally{$("loginBtn").disabled=false}});
 function referralUidFromUrl(){try{const id=new URLSearchParams(location.search).get("ref");return id&&/^[A-Za-z0-9_-]{10,128}$/.test(id)?id:null}catch(e){return null}}
 const incomingReferralUid=referralUidFromUrl();
 let signupOtpVerifiedEmail="";
@@ -263,7 +263,7 @@ async function loadAdminUsers(){
 }
 $("refreshUsersBtn").onclick=loadAdminUsers;
 
-async function loadAnalytics(){try{let [ev,users,prem,msg,live]=await Promise.all([db.collection("analytics").get(),db.collection("users").get(),db.collection("paymentRequests").where("status","==","approved").get(),db.collection("messagePaymentRequests").where("status","==","approved").get()]);let count=t=>ev.docs.filter(d=>d.data().type===t).length;let total=prem.size*199+msg.size*45;$("analytics").innerHTML=`<div class="stats"><div class="stat">App Visits<b>${count("visit")}</b></div><div class="stat">Registrations<b>${count("registration")}</b></div><div class="stat">Logins<b>${count("login")}</b></div><div class="stat">Users<b>${users.size}</b></div><div class="stat">Premium<b>${prem.size}</b></div><div class="stat">Message Purchases<b>${msg.size}</b></div><div class="stat">Live Bookings<b>0</b></div><div class="stat">Approved Revenue<b>₹${total}</b></div></div><p class="small">Visit/login counts are based on browser events. They are estimates, not a secure payment ledger.</p>`}catch(e){$("analytics").textContent="Could not load analytics: "+e.message}}
+async function loadAnalytics(){try{$("analytics").textContent="Loading analytics…";let [ev,users,prem,msg]=await Promise.all([db.collection("analytics").get(),db.collection("users").get(),db.collection("paymentRequests").where("status","==","approved").get(),db.collection("messagePaymentRequests").where("status","==","approved").get()]);let count=t=>ev.docs.filter(d=>d.data().type===t).length;let total=prem.size*199+msg.size*45;$("analytics").innerHTML=`<div class="stats"><div class="stat">App Visits<b>${count("visit")}</b></div><div class="stat">Registrations<b>${count("registration")}</b></div><div class="stat">Logins<b>${count("login")}</b></div><div class="stat">Users<b>${users.size}</b></div><div class="stat">Premium<b>${prem.size}</b></div><div class="stat">Message Purchases<b>${msg.size}</b></div><div class="stat">Live Bookings<b>0</b></div><div class="stat">Approved Revenue<b>₹${total}</b></div></div><p class="small">Visit/login counts are based on browser events. They are estimates, not a secure payment ledger.</p>`}catch(e){$("analytics").textContent="Could not load analytics: "+e.message}}
 
 const DEFAULT_AVATAR="data:image/svg+xml;charset=UTF-8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><rect width="100%" height="100%" fill="#24211b"/><circle cx="80" cy="58" r="29" fill="#d7ad55"/><path d="M25 150c5-34 27-51 55-51s50 17 55 51" fill="#d7ad55"/></svg>');
 $("profilePreview").src=DEFAULT_AVATAR;
@@ -278,8 +278,14 @@ async function loadProfile(u){
  $("profileEmail").textContent=u.email||"";
  $("profileName").value="";$("profilePhone").value="";$("profileGender").value="";
  $("profilePreview").src=DEFAULT_AVATAR;
+ $("profileStatus").textContent="Loading profile…";
+ $("subscriptionStatus").textContent=isAdminUser(u)?"Admin Account • Full Admin Access":"Subscription status loading…";
  try{
-  const snap=await db.collection("users").doc(u.uid).get(),d=snap.exists?snap.data():{};
+  const snap=await new Promise((resolve,reject)=>{
+   const timer=setTimeout(()=>reject(new Error("Profile request timed out. Please check the Firestore connection and security rules.")),15000);
+   db.collection("users").doc(u.uid).get().then(value=>{clearTimeout(timer);resolve(value);},error=>{clearTimeout(timer);reject(error);});
+  });
+  const d=snap.exists?snap.data():{};
   $("profileName").value=d.displayName||d.name||"";
   $("profilePhone").value=d.phone||"";
   $("profileGender").value=d.gender||"";
@@ -288,7 +294,11 @@ async function loadProfile(u){
   if(isAdminUser(u))$("subscriptionStatus").textContent="Admin Account • Full Admin Access";
   else if(d.premium===true&&exp&&exp.toMillis&&exp.toMillis()>Date.now())$("subscriptionStatus").textContent="Premium Active • Expires: "+exp.toDate().toLocaleString("en-IN");
   else $("subscriptionStatus").textContent="Free Account • Premium not active";
- }catch(e){setStatus("profileStatus","Could not load profile: "+e.message)}
+  $("profileStatus").textContent="";
+ }catch(e){
+  setStatus("profileStatus","Could not load profile: "+e.message);
+  $("subscriptionStatus").textContent=isAdminUser(u)?"Admin Account • Full Admin Access":"Could not load subscription status: "+e.message;
+ }
 }
 $("profileForm").onsubmit=async e=>{
  e.preventDefault();const u=auth.currentUser;if(!u)return;
@@ -339,7 +349,13 @@ auth.onAuthStateChanged(async u=>{
  if(chatUnsubscribe){chatUnsubscribe();chatUnsubscribe=null}
  if(notificationUnsubscribe){notificationUnsubscribe();notificationUnsubscribe=null}
  activeConversation=null;
- if(u){listenNotifications();await loadProfile(u);loadGallery();if(!admin){listenMyConversations()}else{loadAdminRequests();loadAdminInbox();loadAdminUsers();loadAnalytics()}}
+ if(u){
+  listenNotifications();
+  loadProfile(u);
+  loadGallery();
+  if(!admin){listenMyConversations()}
+  else{loadAdminRequests();loadAdminInbox();loadAdminUsers();loadAnalytics()}
+ }
  else{$("notificationBell").classList.add("hidden");$("notificationPanel").classList.add("hidden");$("galleryList").replaceChildren();setStatus("galleryStatus","Log in to view the gallery.");$("myConversations").textContent="Log in to view your conversations."}
 });
 let visitKey="ib_visit_"+new Date().toISOString().slice(0,10);if(!sessionStorage.getItem(visitKey)){sessionStorage.setItem(visitKey,"1");track("visit")}
@@ -419,6 +435,6 @@ if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serv
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3h13A2.5 2.5 0 0 1 21 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-13Zm2 .15v.2l7 5.1 7-5.1v-.2a.5.5 0 0 0-.5-.5h-13a.5.5 0 0 0-.5.5Zm14 2.66-6.41 4.67a1 1 0 0 1-1.18 0L5 8.31v10.19a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5V8.31Z"/></svg>
   <span>Help &amp; Support</span>
 </a>
-<div id="ibFooterLogoutWrap"><button type="button" class="danger profile-logout-small" id="profileLogoutBtn">Logout</button></div>
+<div id="ibFooterLogoutWrap" class="hidden"><button type="button" class="danger profile-logout-small" id="profileLogoutBtn">Logout</button></div>
 <footer id="ibCopyrightFooter">© Indian Bhabi • Use only content you own or have permission to share.</footer>
 </body></html>
