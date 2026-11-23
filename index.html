@@ -29,6 +29,12 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 #ibSocialFooter a:hover{opacity:.75}
 #ibSocialFooter svg{width:21px;height:21px;display:block;flex:none}
 @media(max-width:380px){#ibSocialFooter{gap:10px}#ibSocialFooter a{font-size:13px;padding:8px 10px}}
+#ibFooterActions{display:flex;flex-direction:column;align-items:center;gap:12px;padding:0 12px 8px}
+#ibHelpSupport{color:var(--gold2);font-size:13px;text-decoration:none;padding:8px 12px}
+#ibFooterActions #logoutBtn{font-size:11px;padding:6px 12px;min-height:0}
+#ibFooterSpacer{height:24px}
+#ibCopyright{margin-top:0;padding:14px 10px calc(14px + env(safe-area-inset-bottom));font-size:11px}
+
 </style>
 </head>
 <body>
@@ -47,10 +53,10 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 <p class="muted">Log in with your email and password, or create a new account.</p>
 <form id="loginForm"><input id="email" type="email" placeholder="Email address" autocomplete="username" required>
 <input id="password" type="password" placeholder="Password (minimum 6 characters)" minlength="6" required>
-<div id="signupOtpArea"><div class="otp-input-wrap"><input id="signupOtp" type="text" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="Enter 4-digit email OTP" autocomplete="one-time-code"><span id="otpVerifiedMark" aria-label="Email verified">✓</span></div><div class="muted" id="signupOtpStatus">Enter your email and password. OTP will be sent automatically.</div></div>
-<div class="actions signup-actions"><button type="button" id="registerBtn">Create Account</button><button type="button" class="secondary" id="sendSignupOtpBtn">Resend OTP</button></div>
-<div class="account-switch" id="signupSwitch">Already have an account? <button type="button" class="secondary small-switch" id="loginToggleBtn">Login</button></div>
-<div class="actions login-actions hidden"><button type="submit" id="loginBtn">Login</button><button type="button" class="secondary" id="resetBtn" style="font-size:12px;padding:7px 10px">Forgot password?</button><button type="button" class="secondary" id="registerToggleBtn">Create Account</button></div><button type="button" class="secondary hidden" id="logoutBtn">Logout</button></form><div class="status" id="authStatus"></div></section>
+<div id="signupOtpArea" class="hidden"><div class="otp-input-wrap"><input id="signupOtp" type="text" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="Enter 4-digit email OTP" autocomplete="one-time-code"><span id="otpVerifiedMark" aria-label="Email verified">✓</span></div><div class="muted" id="signupOtpStatus">Enter your email and password. OTP will be sent automatically.</div></div>
+<div class="actions signup-actions hidden"><button type="button" id="registerBtn">Create Account</button><button type="button" class="secondary" id="sendSignupOtpBtn">Resend OTP</button></div>
+<div class="account-switch hidden" id="signupSwitch">Already have an account? <button type="button" class="secondary small-switch" id="loginToggleBtn">Login</button></div>
+<div class="actions login-actions"><button type="submit" id="loginBtn">Login</button><button type="button" class="secondary" id="resetBtn" style="font-size:12px;padding:7px 10px">Forgot password?</button><button type="button" class="secondary" id="registerToggleBtn">Create Account</button></div></form><div class="status" id="authStatus"></div></section>
 <section class="panel hidden" id="adminAnalyticsTop"><h2>App Analytics</h2><div id="analytics" class="muted">Loading…</div></section>
 <section class="panel hidden" id="profileSection">
 <h2>My Account</h2>
@@ -113,7 +119,7 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 
 <section class="panel hidden" id="paymentInfoSection"><h2>Payment Information</h2><p class="muted">Your UPI ID is not displayed here. After payment, submit your UTR. The Admin will verify and approve the payment.</p></section>
 </main>
-<footer>© Indian Bhabi • Use only content you own or have permission to share.</footer>
+
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
@@ -138,7 +144,7 @@ $("notificationBell").onclick=()=>{$("notificationPanel").classList.toggle("hidd
 $("closeNotifications").onclick=()=>$("notificationPanel").classList.add("hidden");
 
 function setGalleryFilter(f){activeGalleryFilter=["all","photo","video"].includes(f)?f:"all";document.querySelectorAll("[data-filter]").forEach(b=>{let a=b.dataset.filter===activeGalleryFilter;b.classList.toggle("active",a);b.classList.toggle("secondary",!a)});loadGallery();$("gallerySection").scrollIntoView({behavior:"smooth"})}window.setGalleryFilter=setGalleryFilter;
-let signupMode=true,autoOtpRequestedFor="",otpVerifyInFlight=false;
+let signupMode=false,autoOtpRequestedFor="",otpVerifyInFlight=false;
 function setSignupMode(on){signupMode=on;$("signupOtpArea").classList.toggle("hidden",!on);document.querySelector(".signup-actions").classList.toggle("hidden",!on);$("signupSwitch").classList.toggle("hidden",!on);document.querySelector(".login-actions").classList.toggle("hidden",on);$("loginBtn").classList.toggle("hidden",on);$("resetBtn").classList.toggle("hidden",on);$("registerToggleBtn").classList.toggle("hidden",on);if(on){setStatus("authStatus","Create your account with email OTP verification.");maybeAutoSendSignupOtp();}else{setStatus("authStatus","Log in with your email and password.");}}
 $("loginForm").addEventListener("submit",async e=>{e.preventDefault();if(signupMode)return;setStatus("authStatus","Logging in…");try{await auth.signInWithEmailAndPassword($("email").value.trim(),$("password").value);await track("login");setStatus("authStatus","Login successful.")}catch(x){setStatus("authStatus","Login failed: "+x.message)}});
 function referralUidFromUrl(){try{const id=new URLSearchParams(location.search).get("ref");return id&&/^[A-Za-z0-9_-]{10,128}$/.test(id)?id:null}catch(e){return null}}
@@ -172,7 +178,7 @@ $("loginToggleBtn").onclick=()=>setSignupMode(false);
 $("registerToggleBtn").onclick=()=>setSignupMode(true);
 async function createSignupAccount(email,pw){try{let c=await auth.createUserWithEmailAndPassword(email,pw);const newUserData={email,createdAt:firebase.firestore.FieldValue.serverTimestamp()};if(incomingReferralUid&&incomingReferralUid!==c.user.uid){const refSnap=await db.collection("users").doc(incomingReferralUid).get();if(refSnap.exists)newUserData.referredByUid=incomingReferralUid;}await db.collection("users").doc(c.user.uid).set(newUserData,{merge:true});await track("registration");signupOtpVerifiedEmail="";setStatus("authStatus","Account created successfully. You are now logged in.");}catch(x){setStatus("authStatus","Account creation failed: "+x.message);}}
 $("resetBtn").onclick=async()=>{let e=$("email").value.trim();if(!e)return setStatus("authStatus","Please enter your email first.");try{await auth.sendPasswordResetEmail(e);setStatus("authStatus","Password reset link sent.")}catch(x){setStatus("authStatus",x.message)}};
-setSignupMode(true);
+setSignupMode(false);
 $("logoutBtn").onclick=()=>auth.signOut();
 async function getMediaUrl(item){if(item.url)return item.url;if(!item.storagePath)throw Error("Media URL missing");let u=auth.currentUser;if(!u)throw Error("Login required");let token=await u.getIdToken(true),r=await fetch(SUPABASE_URL+"/functions/v1/quick-action",{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_PUBLISHABLE_KEY,"Authorization":"Bearer "+token},body:JSON.stringify({storagePath:item.storagePath})}),j=await r.json().catch(()=>({}));if(!r.ok||!j.success||!j.signedUrl)throw Error(j.error||"Premium access could not be verified");return j.signedUrl}
 function mediaCard(doc,item,url){let c=document.createElement("article");c.className="media-card";let m=document.createElement(item.type==="video"?"video":"img");if(item.type==="video"){m.controls=true;m.preload="metadata"}else{m.loading="lazy";m.alt=item.title||"Gallery image"}m.src=url;c.append(m);let info=document.createElement("div");info.className="media-info";let t=document.createElement("strong");t.textContent=item.title||"Untitled";info.append(t);if(item.description){let d=document.createElement("small");d.textContent=item.description;info.append(d)}if(isAdminUser()){let b=document.createElement("button");b.className="danger";b.textContent="Delete";b.onclick=async()=>{if(!confirm("Delete this item?"))return;try{if(item.storagePath)await supabaseClient.storage.from(BUCKET).remove([item.storagePath]);await db.collection("gallery").doc(doc.id).delete()}catch(e){alert(e.message)}};info.append(b)}c.append(info);return c}
@@ -250,26 +256,11 @@ async function loadAdminUsers(){
  try{const snap=await db.collection("users").get();box.replaceChildren();if(snap.empty){box.textContent="No users found.";return;}
  const rows=snap.docs.map(d=>({id:d.id,data:d.data()})).sort((a,b)=>{const at=a.data.createdAt&&a.data.createdAt.toMillis?a.data.createdAt.toMillis():0,bt=b.data.createdAt&&b.data.createdAt.toMillis?b.data.createdAt.toMillis():0;return bt-at;});
  rows.forEach(({id,data})=>{const card=document.createElement("div");card.className="user-row";const name=document.createElement("b");name.textContent=data.displayName||data.name||"Name not set";const details=document.createElement("div");details.className="small";const exp=data.premiumUntil&&data.premiumUntil.toDate?data.premiumUntil.toDate().toLocaleString("en-IN"):"—";details.textContent="Email: "+(data.email||"—")+" | Phone: "+(data.phone||"—")+" | Gender: "+(data.gender||"—")+" | Premium: "+(data.premium===true?"Yes":"No")+" | Expiry: "+exp+" | UID: "+id;card.append(name,details);box.append(card)});
- }catch(e){box.textContent="Could not load users: "+e.message;console.error("Admin users load failed",e)}
+ }catch(e){box.textContent="Could not load users: "+e.message}
 }
 $("refreshUsersBtn").onclick=loadAdminUsers;
 
-async function loadAnalytics(){
- const box=$("analytics");box.textContent="Loading analytics…";
- const jobs=await Promise.allSettled([
-  db.collection("analytics").get(),
-  db.collection("users").get(),
-  db.collection("paymentRequests").where("status","==","approved").get(),
-  db.collection("messagePaymentRequests").where("status","==","approved").get()
- ]);
- const [ev,users,prem,msg]=jobs.map(x=>x.status==="fulfilled"?x.value:null);
- const count=t=>ev?ev.docs.filter(d=>d.data().type===t).length:"—";
- const userCount=users?users.size:"—",premiumCount=prem?prem.size:"—",messageCount=msg?msg.size:"—";
- const total=prem&&msg?prem.size*199+msg.size*45:"—";
- box.innerHTML=`<div class="stats"><div class="stat">App Visits<b>${count("visit")}</b></div><div class="stat">Registrations<b>${count("registration")}</b></div><div class="stat">Logins<b>${count("login")}</b></div><div class="stat">Users<b>${userCount}</b></div><div class="stat">Premium<b>${premiumCount}</b></div><div class="stat">Message Purchases<b>${messageCount}</b></div><div class="stat">Live Bookings<b>—</b></div><div class="stat">Approved Revenue<b>${total==="—"?"—":"₹"+total}</b></div></div><p class="small">Visit/login counts are based on browser events. They are estimates, not a secure payment ledger.</p>`;
- const errors=jobs.map((x,i)=>x.status==="rejected"?(["Analytics events","Users","Premium payments","Message payments"][i]+": "+(x.reason?.message||"Permission or network error")):null).filter(Boolean);
- if(errors.length){const note=document.createElement("p");note.className="status";note.textContent="Some analytics data could not load: "+errors.join(" | ");box.append(note)}
-}
+async function loadAnalytics(){try{let [ev,users,prem,msg,live]=await Promise.all([db.collection("analytics").get(),db.collection("users").get(),db.collection("paymentRequests").where("status","==","approved").get(),db.collection("messagePaymentRequests").where("status","==","approved").get()]);let count=t=>ev.docs.filter(d=>d.data().type===t).length;let total=prem.size*199+msg.size*45;$("analytics").innerHTML=`<div class="stats"><div class="stat">App Visits<b>${count("visit")}</b></div><div class="stat">Registrations<b>${count("registration")}</b></div><div class="stat">Logins<b>${count("login")}</b></div><div class="stat">Users<b>${users.size}</b></div><div class="stat">Premium<b>${prem.size}</b></div><div class="stat">Message Purchases<b>${msg.size}</b></div><div class="stat">Live Bookings<b>0</b></div><div class="stat">Approved Revenue<b>₹${total}</b></div></div><p class="small">Visit/login counts are based on browser events. They are estimates, not a secure payment ledger.</p>`}catch(e){$("analytics").textContent="Could not load analytics: "+e.message}}
 
 const DEFAULT_AVATAR="data:image/svg+xml;charset=UTF-8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><rect width="100%" height="100%" fill="#24211b"/><circle cx="80" cy="58" r="29" fill="#d7ad55"/><path d="M25 150c5-34 27-51 55-51s50 17 55 51" fill="#d7ad55"/></svg>');
 $("profilePreview").src=DEFAULT_AVATAR;
@@ -294,7 +285,7 @@ async function loadProfile(u){
   if(isAdminUser(u))$("subscriptionStatus").textContent="Admin Account • Full Admin Access";
   else if(d.premium===true&&exp&&exp.toMillis&&exp.toMillis()>Date.now())$("subscriptionStatus").textContent="Premium Active • Expires: "+exp.toDate().toLocaleString("en-IN");
   else $("subscriptionStatus").textContent="Free Account • Premium not active";
- }catch(e){$("subscriptionStatus").textContent="Account status unavailable: "+e.message;setStatus("profileStatus","Could not load profile: "+e.message)}
+ }catch(e){setStatus("profileStatus","Could not load profile: "+e.message)}
 }
 $("profileForm").onsubmit=async e=>{
  e.preventDefault();const u=auth.currentUser;if(!u)return;
@@ -325,7 +316,6 @@ function showRoleDashboard(u){
  $("notificationBell").classList.toggle("hidden",!loggedIn);
  $("account").classList.toggle("hidden",loggedIn);
  $("profileSection").classList.toggle("hidden",!loggedIn);
- $("profileLogoutBtn").classList.toggle("hidden",!loggedIn);
  $("adminPanel").classList.toggle("hidden",!admin);
  $("adminAnalyticsTop").classList.toggle("hidden",!admin);
  $("userHero").classList.toggle("hidden",!loggedIn||admin);
@@ -336,7 +326,7 @@ function showRoleDashboard(u){
 }
 auth.onAuthStateChanged(async u=>{
  const admin=isAdminUser(u);showRoleDashboard(u);
- $("logoutBtn").classList.add("hidden");
+ $("logoutBtn").classList.toggle("hidden",!u);
  ["email","password"].forEach(id=>$(id).disabled=!!u);
  if(u){["loginBtn","registerBtn","resetBtn","loginToggleBtn","registerToggleBtn","sendSignupOtpBtn"].forEach(id=>$(id).classList.add("hidden"));}else{setSignupMode(signupMode);}
  setStatus("authStatus",u?(admin?"Logged in as Admin.":"Logged in as User."):"Log in or create an account.");
@@ -344,15 +334,8 @@ auth.onAuthStateChanged(async u=>{
  if(chatUnsubscribe){chatUnsubscribe();chatUnsubscribe=null}
  if(notificationUnsubscribe){notificationUnsubscribe();notificationUnsubscribe=null}
  activeConversation=null;
- if(u){
-  listenNotifications();
-  if(admin){
-   // Start admin data panels independently; a slow profile read must not block them.
-   loadAdminRequests();loadAdminInbox();loadAdminUsers();loadAnalytics();
-  }else{listenMyConversations()}
-  loadProfile(u).catch(e=>{console.error("Profile load failed",e);$("subscriptionStatus").textContent="Account status unavailable: "+(e.message||e)});
-  loadGallery();
- }else{$("notificationBell").classList.add("hidden");$("notificationPanel").classList.add("hidden");$("galleryList").replaceChildren();setStatus("galleryStatus","Log in to view the gallery.");$("myConversations").textContent="Log in to view your conversations."}
+ if(u){listenNotifications();await loadProfile(u);loadGallery();if(!admin){listenMyConversations()}else{loadAdminRequests();loadAdminInbox();loadAdminUsers();loadAnalytics()}}
+ else{$("notificationBell").classList.add("hidden");$("notificationPanel").classList.add("hidden");$("galleryList").replaceChildren();setStatus("galleryStatus","Log in to view the gallery.");$("myConversations").textContent="Log in to view your conversations."}
 });
 let visitKey="ib_visit_"+new Date().toISOString().slice(0,10);if(!sessionStorage.getItem(visitKey)){sessionStorage.setItem(visitKey,"1");track("visit")}
 if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
@@ -419,12 +402,18 @@ if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serv
 
 <footer id="ibSocialFooter" aria-label="Follow INDIAN BHABI on social media">
   <a href="https://t.me/+g9XEOk75HJhhMTE1" target="_blank" rel="noopener noreferrer" aria-label="Join our Telegram">
-    <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M21.7 4.3 18.6 19c-.23 1.04-.84 1.3-1.7.81l-4.7-3.47-2.27 2.18c-.25.25-.46.46-.94.46l.34-4.78 8.7-7.86c.38-.34-.08-.53-.59-.19L6.7 13.05l-4.62-1.44c-1-.31-1.02-1 .21-1.48L20.35 3.2c.84-.31 1.58.2 1.35 1.1Z"/></svg>
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="#29a9eb"><path d="M21.7 4.3 18.6 19c-.23 1.04-.84 1.3-1.7.81l-4.7-3.47-2.27 2.18c-.25.25-.46.46-.94.46l.34-4.78 8.7-7.86c.38-.34-.08-.53-.59-.19L6.7 13.05l-4.62-1.44c-1-.31-1.02-1 .21-1.48L20.35 3.2c.84-.31 1.58.2 1.35 1.1Z"/></svg>
     <span>Telegram</span>
   </a>
   <a href="https://www.instagram.com/__indian_bhabi__?cnvx=MWFzbmpvbmx3YmczYQ==" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Instagram">
-    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg>
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#e4408f" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.6" r="1" fill="#e4408f" stroke="none"/></svg>
     <span>Instagram</span>
   </a>
 </footer>
+<div id="ibFooterActions">
+  <a id="ibHelpSupport" href="mailto:misiroy75@gmail.com">Help &amp; Support</a>
+  <button type="button" class="secondary hidden" id="logoutBtn">Logout</button>
+</div>
+<div id="ibFooterSpacer" aria-hidden="true"></div>
+<footer id="ibCopyright">© Indian Bhabi. All rights reserved.</footer>
 </body></html>
