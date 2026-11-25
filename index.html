@@ -113,9 +113,10 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 <div class="filters"><button class="active" data-filter="all" onclick="setGalleryFilter('all')">All</button><button class="secondary" data-filter="photo" onclick="setGalleryFilter('photo')">Photos</button><button class="secondary" data-filter="video" onclick="setGalleryFilter('video')">Videos</button></div>
 <div class="status" id="galleryStatus">Log in to view the gallery.</div><div class="gallery" id="galleryList"></div></section>
 
-<section class="panel hidden" id="paymentSection"><h2>Premium Membership</h2><div class="price">₹199 / 30 Days</div><p class="muted">Pay using PhonePe, Google Pay, or another UPI app. Then submit your UTR.</p>
+<section class="panel hidden" id="paymentSection"><h2>Premium Membership</h2><div class="price">₹199 / 30 Days</div><p class="muted">Pay using PhonePe, Google Pay, or another UPI app. After payment, return to Indian Bhabi and upload your payment screenshot.</p>
 <button type="button" id="payUpiBtn">Pay ₹199 Now</button>
-<form id="paymentForm"><label class="muted" for="utrNumber">Payment UTR / Transaction ID</label><input id="utrNumber" placeholder="Enter UTR / Transaction ID" minlength="8" maxlength="30" required><button id="paymentSubmit">Submit Premium Request</button></form><div class="status" id="paymentStatus"></div>
+<div id="paymentReturnNotice" class="muted hidden" style="margin-top:12px">Payment app থেকে ফিরে এসেছো। এখন payment screenshot upload করো।</div>
+<form id="paymentForm" class="hidden"><label class="muted" for="paymentScreenshot">Payment Screenshot</label><input id="paymentScreenshot" type="file" accept="image/*" required><p class="small">Screenshot থেকে UTR automatically খোঁজা হবে। ভুল হলে তুমি নিজে ঠিক করতে পারবে।</p><div id="utrOcrStatus" class="status"></div><label class="muted" for="utrNumber">Detected UTR / Transaction ID</label><input id="utrNumber" placeholder="Screenshot upload করার পর UTR আসবে" minlength="8" maxlength="30" required><button id="paymentSubmit">Submit Premium Request</button></form><div class="status" id="paymentStatus"></div>
 </section>
 
 <section class="panel hidden" id="messagesSection"><h2>Private Message</h2><div class="price">₹45 / New Conversation</div><p class="muted">Pay ₹45 once to send unlimited messages in that conversation. A new conversation requires another ₹45 payment.</p>
@@ -131,6 +132,7 @@ button{border:0;border-radius:9px;padding:12px 16px;background:linear-gradient(1
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script src="./ZegoExpressWebRTC-3.13.0.js"></script>
 <script>
 "use strict";
@@ -193,9 +195,30 @@ async function loadGallery(){if(galleryUnsubscribe)galleryUnsubscribe();galleryU
 $("uploadForm").onsubmit=async e=>{e.preventDefault();if(!isAdminUser())return;let f=$("mediaFile").files[0];if(!f||f.size>50*1024*1024)return setStatus("uploadStatus","Choose a photo or video up to 50 MB.");setStatus("uploadStatus","Uploading…");try{let path=Date.now()+"_"+f.name.replace(/[^a-zA-Z0-9._-]/g,"_"),{error}=await supabaseClient.storage.from(BUCKET).upload(path,f,{contentType:f.type});if(error)throw error;const mediaType=f.type.startsWith("video/")?"video":"photo",mediaTitle=$("mediaTitle").value.trim(),mediaDescription=$("mediaDescription").value.trim();await db.collection("gallery").add({title:mediaTitle,type:mediaType,storagePath:path,description:mediaDescription,createdAt:firebase.firestore.FieldValue.serverTimestamp()});await publishNotification({type:mediaType,title:mediaTitle,description:mediaDescription});$("uploadForm").reset();setStatus("uploadStatus","Upload successful.")}catch(x){setStatus("uploadStatus",x.message)}};
 $("urlForm").onsubmit=async e=>{e.preventDefault();if(!isAdminUser())return;let u=$("mediaUrl").value.trim();try{const mediaType=/\.(mp4|webm|ogg)(\?.*)?$/i.test(u)?"video":"photo",mediaTitle=$("urlTitle").value.trim(),mediaDescription=$("urlDescription").value.trim();await db.collection("gallery").add({title:mediaTitle,type:mediaType,url:u,description:mediaDescription,createdAt:firebase.firestore.FieldValue.serverTimestamp()});await publishNotification({type:mediaType,title:mediaTitle,description:mediaDescription,url:u});$("urlForm").reset();setStatus("urlStatus","URL added.")}catch(x){setStatus("urlStatus",x.message)}};
 function openUPI(amount,description){if(!auth.currentUser){setStatus("paymentStatus","Please log in first.");$("account").scrollIntoView({behavior:"smooth"});return}let p=new URLSearchParams({pa:PAYMENT_UPI,pn:"Indian Bhabi",am:String(amount),cu:"INR",tn:description});location.href="upi://pay?"+p.toString()}
-$("payUpiBtn").onclick=()=>openUPI(199,"Indian Bhabi Premium 30 Days");
+function showPremiumProofForm(){if(!auth.currentUser||isAdminUser())return;$("paymentForm").classList.remove("hidden");$("paymentReturnNotice").classList.remove("hidden");$("paymentForm").scrollIntoView({behavior:"smooth",block:"center"});}
+$("payUpiBtn").onclick=()=>{sessionStorage.setItem("ib_premium_payment_started",String(Date.now()));openUPI(199,"Indian Bhabi Premium 30 Days")};
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&sessionStorage.getItem("ib_premium_payment_started"))showPremiumProofForm()});
+window.addEventListener("pageshow",()=>{if(sessionStorage.getItem("ib_premium_payment_started"))showPremiumProofForm()});
+$("paymentScreenshot").addEventListener("change",async()=>{
+ const file=$("paymentScreenshot").files[0];$("utrNumber").value="";
+ if(!file)return;
+ if(!file.type.startsWith("image/")){setStatus("utrOcrStatus","Please select a valid image.");$("paymentScreenshot").value="";return}
+ if(file.size>8*1024*1024){setStatus("utrOcrStatus","Screenshot must be under 8 MB.");$("paymentScreenshot").value="";return}
+ if(!window.Tesseract){setStatus("utrOcrStatus","OCR service could not load. Please try again.");return}
+ setStatus("utrOcrStatus","Reading screenshot and detecting UTR…");
+ try{
+  const result=await Tesseract.recognize(file,"eng");
+  const raw=(result.data.text||"").toUpperCase();
+  const lines=raw.split(/\\n+/).map(x=>x.trim()).filter(Boolean),candidates=[];
+  for(const line of lines){if(/UTR|UPI|TRANSACTION|REF(?:ERENCE)?|RRN|BANK REF/i.test(line)){const matches=line.match(/[A-Z0-9]{10,30}/g)||[];candidates.push(...matches)}}
+  if(!candidates.length)candidates.push(...(raw.match(/\\b[A-Z0-9]{12,30}\\b/g)||[]));
+  const utr=candidates.find(x=>/[0-9]/.test(x)&&/[A-Z]/.test(x))||candidates.find(x=>/^\\d{12,18}$/.test(x))||"";
+  if(utr){$("utrNumber").value=utr;setStatus("utrOcrStatus","UTR detected. Please check it before submitting.");}
+  else setStatus("utrOcrStatus","UTR could not be detected. Please enter it manually from the screenshot.");
+ }catch(e){setStatus("utrOcrStatus","Could not read screenshot. Please enter the UTR manually.");}
+});
 $("liveNoticeForm").onsubmit=async e=>{e.preventDefault();try{await publishNotification({type:"live",title:$("liveNoticeTitle").value.trim(),description:$("liveNoticeDescription").value.trim(),url:$("liveNoticeUrl").value.trim()});$("liveNoticeForm").reset();setStatus("liveNoticeStatus","Live notification sent to users.")}catch(x){setStatus("liveNoticeStatus","Could not send notification: "+x.message)}};
-$("paymentForm").onsubmit=async e=>{e.preventDefault();let u=auth.currentUser;if(!u)return setStatus("paymentStatus","Please log in first.");let utr=$("utrNumber").value.trim();if(!/^[a-zA-Z0-9]{8,30}$/.test(utr))return setStatus("paymentStatus","Please enter a valid UTR.");try{await db.collection("paymentRequests").add({uid:u.uid,email:u.email,utr,amount:199,planDays:30,upiId:PAYMENT_UPI,status:"pending",createdAt:firebase.firestore.FieldValue.serverTimestamp()});$("paymentForm").reset();setStatus("paymentStatus","Request submitted. The Admin will verify it.")}catch(x){setStatus("paymentStatus",x.message)}};
+$("paymentForm").onsubmit=async e=>{e.preventDefault();let u=auth.currentUser;if(!u)return setStatus("paymentStatus","Please log in first.");const file=$("paymentScreenshot").files[0],utr=$("utrNumber").value.trim();if(!file)return setStatus("paymentStatus","Please upload your payment screenshot.");if(!/^[a-zA-Z0-9]{8,30}$/.test(utr))return setStatus("paymentStatus","Please check the detected UTR.");const btn=$("paymentSubmit");btn.disabled=true;setStatus("paymentStatus","Uploading screenshot…");try{const path="payment-proofs/"+u.uid+"/"+Date.now()+"_"+file.name.replace(/[^a-zA-Z0-9._-]/g,"_");const {error:uploadError}=await supabaseClient.storage.from(BUCKET).upload(path,file,{contentType:file.type,upsert:false});if(uploadError)throw uploadError;await db.collection("paymentRequests").add({uid:u.uid,email:u.email,utr,proofPath:path,amount:199,planDays:30,upiId:PAYMENT_UPI,status:"pending",createdAt:firebase.firestore.FieldValue.serverTimestamp()});$("paymentForm").reset();$("paymentForm").classList.add("hidden");$("paymentReturnNotice").classList.add("hidden");$("payUpiBtn").classList.remove("hidden");sessionStorage.removeItem("ib_premium_payment_started");setStatus("paymentStatus","Screenshot and UTR submitted. The Admin will verify your payment.");}catch(x){setStatus("paymentStatus","Could not submit payment proof: "+x.message)}finally{btn.disabled=false}};
 $("newConversationPay").onclick=()=>{if(!auth.currentUser)return setStatus("messagePaymentStatus","Please log in first.");openUPI(45,"Indian Bhabi New Conversation");$("messagePaymentForm").classList.remove("hidden");setStatus("messagePaymentStatus","Pay ₹45 in your UPI app, return here, and submit the UTR.")};
 $("messagePaymentForm").onsubmit=async e=>{e.preventDefault();let u=auth.currentUser;if(!u)return;let utr=$("messageUtr").value.trim();if(!/^[a-zA-Z0-9]{8,30}$/.test(utr))return setStatus("messagePaymentStatus","Please enter a valid UTR.");try{await db.collection("messagePaymentRequests").add({uid:u.uid,email:u.email,utr,amount:45,status:"pending",createdAt:firebase.firestore.FieldValue.serverTimestamp()});$("messagePaymentForm").reset();setStatus("messagePaymentStatus","Your ₹45 request has been submitted. The Admin will verify it and open the conversation.")}catch(x){setStatus("messagePaymentStatus",x.message)}};
 function listenMyConversations(){if(!auth.currentUser)return;$("myConversations").textContent="Loading…";db.collection("conversations").where("memberUids","array-contains",auth.currentUser.uid).onSnapshot(s=>{let box=$("myConversations");box.replaceChildren();if(s.empty){box.textContent="No conversations yet.";return}s.forEach(d=>{let b=document.createElement("button");b.className="secondary";b.textContent="Conversation • "+d.id.slice(0,7);b.onclick=()=>openConversation(d.id);box.append(b)})},e=>$("myConversations").textContent=e.message)}
@@ -214,6 +237,7 @@ $("adminSendMessageForm").onsubmit=e=>{e.preventDefault();sendConversationMessag
 function adminApproveRequest(collectionName,doc,item,kind){
  let wrap=document.createElement("div");wrap.className="request-card";
  let p=document.createElement("p");p.textContent=kind+" | "+(item.email||"")+" | ₹"+item.amount+" | UTR: "+item.utr+" | "+item.status;wrap.append(p);
+ if(item.proofPath&&isAdminUser()){let proof=document.createElement("button");proof.type="button";proof.className="secondary";proof.textContent="View Payment Screenshot";proof.onclick=async()=>{proof.disabled=true;try{const {data,error}=await supabaseClient.storage.from(BUCKET).createSignedUrl(item.proofPath,3600);if(error)throw error;window.open(data.signedUrl,"_blank","noopener");}catch(e){alert("Screenshot could not be opened: "+e.message)}finally{proof.disabled=false}};wrap.append(proof)}
  if(item.status==="pending"){
   let a=document.createElement("button");a.textContent="Approve";
   a.onclick=async()=>{
@@ -354,6 +378,8 @@ window.addEventListener("pagehide",stopPresence);
 
 function showRoleDashboard(u){
  const admin=isAdminUser(u),loggedIn=!!u;
+ if(!u||admin){$("paymentForm").classList.add("hidden");$("paymentReturnNotice").classList.add("hidden");}
+ else if(sessionStorage.getItem("ib_premium_payment_started"))showPremiumProofForm();
  $("notificationBell").classList.toggle("hidden",!loggedIn);
  $("account").classList.toggle("hidden",loggedIn);
  $("profileSection").classList.toggle("hidden",!loggedIn);
